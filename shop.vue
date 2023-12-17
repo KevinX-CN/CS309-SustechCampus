@@ -1,103 +1,194 @@
 <template>
-  <div id ="app" >
+  <div id="app">
     <template v-if="list.length">
-      <table border="1px" style="width: 400px;">
-        <thead>
-        <tr>
-          <th>编号</th>
-          <th>商品名称</th>
-          <th>商品单价</th>
-          <th>购买数量</th>
-          <th>操作</th>
-        </tr>
-        </thead>
-        <tr v-for="(product,index) in list">
-          <td>{{index+1}}</td>
-          <td>{{product.name}}</td>
-          <td>{{product.price}} </td>
-          <td>
-            <button @click="subProduct(index)" :disabled="product.count==1">-</button>
-            {{product.count}}
-            <button @click="addProduct(index)">+</button>
-          </td>
-          <td><button @click="removePriduct(index)">移除</button></td>
-        </tr>
-        <tbody>
-        </tbody>
-      </table>
-      <div>总金额：￥{{totalPrice}}</div>
-      <button @click="back">支付</button>
+      <el-table :data="list" border style="width: 600px;">
+        <el-table-column type="index" label="编号"></el-table-column>
+        <el-table-column prop="name" label="商品名称"></el-table-column>
+        <el-table-column label="商品图片">
+          <template slot-scope="scope">
+            <img :src="scope.row.image" alt="商品图片" style="width: 50px; height: 50px;">
+          </template>
+        </el-table-column>
+        <el-table-column prop="price" label="商品单价"></el-table-column>
+        <el-table-column label="购买数量">
+          <template slot-scope="scope">
+            <el-button @click="subProduct(scope.$index)" :disabled="scope.row.count === 1" size="mini">-</el-button>
+            <span>{{ scope.row.count }}</span>
+            <el-button @click="addProduct(scope.$index)" size="mini">+</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button @click="removeProduct(scope.$index)" size="mini" type="danger">移除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="total-price">总金额：￥{{ totalPrice }}</div>
+      <el-button @click="showPaymentDialog" type="primary">支付</el-button>
     </template>
-    <template v-else>购物车为空 </template>
-  </div>
+    <template v-else>
+      <div class="empty-cart">购物车为空</div>
+    </template>
+    <el-button @click="showAddProductDialog" type="primary">添加商品</el-button>
 
+    <el-dialog :visible.sync="addProductDialogVisible" title="添加商品" width="30%">
+      <el-form label-width="80px">
+        <el-form-item label="商品编号">
+          <el-input v-model="newProduct.id"></el-input>
+        </el-form-item>
+        <el-form-item label="商品名称">
+          <el-input v-model="newProduct.name"></el-input>
+        </el-form-item>
+        <el-form-item label="商品单价">
+          <el-input-number v-model="newProduct.price" :min="0"></el-input-number>
+        </el-form-item>
+        <el-form-item label="购买数量">
+          <el-input-number v-model="newProduct.count" :min="0"></el-input-number>
+        </el-form-item>
+        <el-form-item label="商品图片">
+          <el-input v-model="newProduct.image"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer">
+        <el-button @click="addProductDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="addProduct1">确认添加</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="paymentDialogVisible" title="支付" width="30%">
+      <p>确认支付总金额：<strong>{{ totalPrice }}</strong>元</p>
+      <p>请选择支付方式：</p>
+      <el-radio-group v-model="paymentMethod">
+        <el-radio label="wechat">微信支付</el-radio>
+        <el-radio label="alipay">支付宝支付</el-radio>
+      </el-radio-group>
+      <div slot="footer">
+        <el-button @click="paymentDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="pay">确认支付</el-button>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
-
 <script>
-//创建Vue实例,得到 ViewModel
-import homepage from "./Homepage.vue";
-
 export default {
-  data:function (){
-    return{
+  data() {
+    return {
       list: [
         {
-          id:1,
-          name:'南科大衬衫',
-          price:72,
-          count:2
+          id: 1,
+          name: '南科大衬衫',
+          price: 72,
+          count: 2,
+          image: '../static/爱心.jpg'
         },
         {
-          id:2,
-          name:'卡套',
-          price:61,
-          count:1,
+          id: 2,
+          name: '卡套',
+          price: 61,
+          count: 1,
+          image: './img/123.png'
         },
         {
-          id:3,
-          name:'一丹积木',
-          price:399,
-          count:3
-        }]
+          id: 3,
+          name: '一丹积木',
+          price: 399,
+          count: 3,
+          image: './img/123.png'
+        }
+      ],
+      paymentDialogVisible: false,
+      addProductDialogVisible: false,
+      newProduct: {
+        id: '',
+        name: '',
+        price: 0,
+        count: 0,
+        image: ''
+      },
+      paymentMethod: ''
+    };
+  },
+  methods: {
+    addProduct1() {
+      this.list.push({
+        id: this.newProduct.id,
+        name: this.newProduct.name,
+        price: this.newProduct.price,
+        count: this.newProduct.count,
+        image: this.newProduct.image
+      });
+
+      this.addProductDialogVisible = false;
+
+      // 重置newProduct对象
+      this.newProduct = {
+        id: '',
+        name: '',
+        price: 0,
+        count: 0,
+        image: ''
+      };
+    },
+    showAddProductDialog() {
+      this.addProductDialogVisible = true;
+    },
+    subProduct(index) {
+      this.list[index].count--;
+    },
+    addProduct(index) {
+      this.list[index].count++;
+    },
+    removeProduct(index) {
+      this.list.splice(index, 1);
+    },
+    showPaymentDialog() {
+      this.paymentDialogVisible = true;
+    },
+    pay() {
+      // 执行支付逻辑
+      // 可根据this.paymentMethod的值进行不同的支付方式处理
+      // 支付成功后可以进行相应的操作，如清空购物车等
+      this.paymentDialogVisible = false;
+      // 清空购物车
+      this.list = [];
+      // 弹出支付成功的提示框
+      this.$message.success('支付成功！');
     }
   },
-  /*自动加载函数*/
-    /*执行触发函数*/
-    methods: {
-      //数量减少
-      subProduct:function(index){
-        this.list[index].count--;
-      },
-      //数量增加
-      addProduct:function(index){
-        this.list[index].count++;
-      },
-      //清除订单
-      removePriduct:function(index){
-        this.list.splice(index,1);
-      },
-      back:function () {
-        this.$router.push("Homepage")
+  computed: {
+    totalPrice() {
+      let total = 0;
+      for (let i = 0; i < this.list.length; i++) {
+        total += this.list[i].price * this.list[i].count;
       }
-    },
-    /*动态计算属性*/
-    computed: {
-      //返回总金额
-      totalPrice:function(){
-        var total=0;
-        for (var i=0;i < this.list.length;i++){
-          total+=this.list[i].price*this.list[i].count;
-        }
-        return total;
-      }
-    },
+      return total;
+    }
   }
+};
 </script>
 
+<style scoped>
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+}
 
+.total-price {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
 
+.empty-cart {
+  margin-top: 20px;
+  font-size: 20px;
+  color: #999;
+}
 
-<style>
-
+.el-button {
+  margin-top: 20px;
+}
 </style>
