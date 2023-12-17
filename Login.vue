@@ -57,7 +57,7 @@ export default {
   methods:{
 
     register(){  this.$router.push("Register")},
-    visitor(){this.$router.push("shop")},
+    visitor(){this.$router.push("demo")},
 
     // getParams: function () {
     //         // 取到路由带过来的参数
@@ -78,7 +78,7 @@ export default {
       )
       if(flag==1){
         //可以跳转到主页
-        this.$router.push("Homepage");
+        this.$router.push("demo");
       }
       else{
         alert("用户名或密码错误，请重新输入");
@@ -100,7 +100,7 @@ export default {
         //可以跳转到主页
         // this.$router.push("Homepage");
         this.$router.push({
-            path: 'Homepage',
+            path: 'demo',
           }
         )
       }
@@ -116,7 +116,12 @@ export default {
 </script>
 
 <style scoped>
-
+.container{
+  background-color: #c5d5d0;
+  width:100%;
+  height:100%;
+  position:fixed;
+}
 .loginbox{
     display:flex;
     position:absolute;
@@ -152,6 +157,7 @@ export default {
     font-family:sans-serif;
 }
 .title{
+    margin-left: 60px;
     margin-top:350px;
     font-weight:bold;
     font-size:20px;
@@ -163,9 +169,7 @@ export default {
      transition: all 0.4s ease-in-out;
      cursor: pointer;
 }
-.uesr-text{
-     position:left;
-}
+
 input{
     outline-style: none ;
     border: 0;
@@ -251,7 +255,7 @@ input:-webkit-autofill::first-line {
 .warn{
     margin-top:60px;
     /* margin-right:120px; */
-    margin-left:-120px;
+    margin-left:20px;
     margin-bottom: 5px;
      font-weight:bold;
     font-size:17px;
