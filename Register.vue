@@ -98,7 +98,12 @@ export default {
 </script>
 
 <style scoped>
-
+.container{
+  background-color: #c5d5d0;
+  width:100%;
+  height:100%;
+  position:fixed;
+}
 .loginbox{
     display:flex;
     position:absolute;
@@ -134,6 +139,7 @@ export default {
     font-family:sans-serif;
 }
 .title{
+    margin-left: 60px;
     margin-top:350px;
     font-weight:bold;
     font-size:20px;
@@ -144,9 +150,7 @@ export default {
      transition: all 0.4s ease-in-out;
      cursor: pointer;
 }
-.uesr-text{
-     position:left;
-}
+
 input{
     outline-style: none ;
     border: 0;
