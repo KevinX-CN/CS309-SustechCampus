@@ -8,19 +8,19 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class User {
+public class Account {
 
   @Id
   @GeneratedValue
   private UUID uid;
-  private String userName;
+  private String username;
   private String password;
 
-  public User() {
+  public Account() {
   }
 
-  public User(String userName, String password) {
-    this.userName = userName;
+  public Account(String username, String password) {
+    this.username = username;
     this.password = password;
   }
 
@@ -29,11 +29,11 @@ public class User {
   }
 
   public String getUserName() {
-    return this.userName;
+    return this.username;
   }
 
   public void setUserName(String userName) {
-    this.userName = userName;
+    this.username = userName;
   }
 
   public void setPassword(String password) {

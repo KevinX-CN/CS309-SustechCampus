@@ -7,7 +7,7 @@
           <div class="loginbox-in">
           <div class="userbox">
            <span class="iconfont">&#xe817;</span>
-           <input  class="user" id="user"   v-model="name" placeholder="用户名">
+           <input  class="account" id="account"   v-model="name" placeholder="用户名">
            </div>
           <br>
           <div class="pwdbox">

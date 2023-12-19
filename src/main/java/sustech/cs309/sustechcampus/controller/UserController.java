@@ -1,23 +1,21 @@
 package sustech.cs309.sustechcampus.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.UUID;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import sustech.cs309.sustechcampus.service.UserService;
+import sustech.cs309.sustechcampus.model.Account;
+import sustech.cs309.sustechcampus.service.AccountService;
 
 @RestController
 @CrossOrigin
-@Tag(name ="User Apis")
 public class UserController {
 
-  private final UserService userService;
+  private final AccountService userService;
 
-  public UserController(UserService userService) {
+  public UserController(AccountService userService) {
     this.userService = userService;
   }
 
@@ -26,11 +24,10 @@ public class UserController {
     return "Login.vue";
   }
 
-  @Operation(summary = "User Login")
   @PostMapping(value = {"/api/user/login", "/login"})
-  public boolean postLoginView(@RequestParam(value = "userName") String userName,
+  public boolean postLoginView(@RequestParam(value = "username") String username,
     @RequestParam(value = "password") String password) {
-    System.out.println("Viewing");
+    //return this.userService.verifyUser(username, password);
     return true;
   }
 
@@ -39,22 +36,12 @@ public class UserController {
     return "Register";
   }
 
-  @Operation(summary = "User Register")
-  @PostMapping(value = {"/api/user/register","/register"})
+
+  @PostMapping(value = {"/api/user/register", "/register"})
   public UUID apiUserRegister(@RequestParam(value = "username") String username,
     @RequestParam(value = "password") String password) {
-    return this.userService.register(username, password);
-  }
-
-  @GetMapping(value = "/user")
-  public String getUserView() {
-    return "user";
-  }
-
-  @PostMapping(value = "/user")
-  public boolean postUserView(@RequestParam(value = "userName") String userName,
-    @RequestParam(value = "password") String password) {
-    System.out.println("Viewing");
-    return true;
+    Account account = new Account(username, password);
+    //return this.userService.addUser(user);
+    return null;
   }
 }

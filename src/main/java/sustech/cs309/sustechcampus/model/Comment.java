@@ -18,8 +18,10 @@ public class Comment {
   private UUID bid;
   private String commentContent;
   private Date commentTime;
+  private UUID nextComment;
 
   public Comment() {
+
   }
 
   public Comment(UUID uid, UUID bid, String commentContent, Date commentTime) {
@@ -27,5 +29,42 @@ public class Comment {
     this.bid = bid;
     this.commentContent = commentContent;
     this.commentTime = commentTime;
+    this.nextComment = null;
+  }
+
+  public UUID getCid() {
+    return cid;
+  }
+
+  public UUID getUid() {
+    return uid;
+  }
+
+  public UUID getBid() {
+    return bid;
+  }
+
+  public String getCommentContent() {
+    return commentContent;
+  }
+
+  public void setCommentContent(String commentContent) {
+    this.commentContent = commentContent;
+  }
+
+  public Date getCommentTime() {
+    return commentTime;
+  }
+
+  public void setCommentTime(Date commentTime) {
+    this.commentTime = commentTime;
+  }
+
+  public UUID getNextComment() {
+    return nextComment;
+  }
+
+  public void setNextComment(UUID nextComment) {
+    this.nextComment = nextComment;
   }
 }

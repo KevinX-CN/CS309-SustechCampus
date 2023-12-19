@@ -1,13 +1,10 @@
 package sustech.cs309.sustechcampus.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table
@@ -18,21 +15,19 @@ public class Building {
   private UUID bid;
   private String buildingName;
   private String buildingIntroduction;
-  @Transient
-  private List<String> buildingImgPath;
+  private String buildingImgPath;
+  private UUID firstComment;
+  private UUID lastComment;
 
   public Building() {
   }
 
-  public Building(String buildingName) {
-    this.buildingName = buildingName;
-    this.buildingImgPath = new ArrayList<>();
-  }
-
-  public Building(String buildingName, String buildingIntroduction) {
+  public Building(String buildingName, String buildingIntroduction, String buildingImgPath) {
     this.buildingName = buildingName;
     this.buildingIntroduction = buildingIntroduction;
-    this.buildingImgPath = new ArrayList<>();
+    this.buildingImgPath = buildingImgPath;
+    this.firstComment = null;
+    this.lastComment = null;
   }
 
   public UUID getBid() {
@@ -43,12 +38,39 @@ public class Building {
     return buildingName;
   }
 
+  public void setBuildingName(String buildingName) {
+    this.buildingName = buildingName;
+  }
+
   public String getBuildingIntroduction() {
     return buildingIntroduction;
   }
 
-  @Override
-  public String toString() {
-    return this.buildingName + '|' + this.buildingIntroduction;
+  public void setBuildingIntroduction(String buildingIntroduction) {
+    this.buildingIntroduction = buildingIntroduction;
+  }
+
+  public String getBuildingImgPath() {
+    return buildingImgPath;
+  }
+
+  public void setBuildingImgPath(String buildingImgPath) {
+    this.buildingImgPath = buildingImgPath;
+  }
+
+  public UUID getFirstComment() {
+    return firstComment;
+  }
+
+  public void setFirstComment(UUID firstComment) {
+    this.firstComment = firstComment;
+  }
+
+  public UUID getLastComment() {
+    return lastComment;
+  }
+
+  public void setLastComment(UUID lastComment) {
+    this.lastComment = lastComment;
   }
 }

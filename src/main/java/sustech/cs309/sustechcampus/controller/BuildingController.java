@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import sustech.cs309.sustechcampus.service.BuildingService;
 
 @RestController
+@CrossOrigin
 public class BuildingController {
 
   private final BuildingService buildingService;
@@ -16,16 +17,9 @@ public class BuildingController {
     this.buildingService = buildingService;
   }
 
-  @CrossOrigin
-  @GetMapping(value = "/api/building")
-  public String getApiBuilding(@RequestParam(value = "bid") UUID bid) {
-    return this.buildingService.getBuildingById(bid).toString();
-  }
 
-  @CrossOrigin
-  @GetMapping(value = "/api/setBuildingName")
-  public String getApiSetBuildingName(@RequestParam(value = "bid") UUID bid,
-    @RequestParam(value = "name") String buildingName) {
-    return this.buildingService.getBuildingById(bid).toString();
+  @GetMapping(value = "/api/building")
+  public String getApiBuilding(@RequestParam(value = "name") String buildingName) {
+    return this.buildingService.getBuildingByName(buildingName).toString();
   }
 }
