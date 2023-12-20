@@ -1,7 +1,10 @@
 package sustech.cs309.sustechcampus.service;
 
+import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sustech.cs309.sustechcampus.model.Account;
 import sustech.cs309.sustechcampus.repository.AccountRepository;
 
 @Service
@@ -14,18 +17,16 @@ public class AccountService {
     this.userRepository = userRepository;
   }
 
-  /*public UUID addUser(User user) {
-    List<User> userByName = this.userRepository.findAllByUserName(user.getUserName());
+  public void addAccount(Account account) {
+    List<Account> userByName = this.userRepository.findAllByUsername(account.getUserName());
     if (userByName.size() > 0) {
-      return null;
+      return;
     }
-    this.userRepository.save(user);
-    return user.getUid();
+    this.userRepository.save(account);
   }
 
-  public boolean verifyUser(String username, String password) {
-    User user = new User(username, password);
-    List<User> userByName = this.userRepository.findAllByUserName(username);
+  public boolean verifyAccount(String username, String password) {
+    List<Account> userByName = this.userRepository.findAllByUsername(username);
     if (userByName.size() == 0) {
       return false;
     }
@@ -33,10 +34,10 @@ public class AccountService {
   }
 
   public UUID getUidByUsername(String username) {
-    List<User> userByName = this.userRepository.findAllByUserName(username);
+    List<Account> userByName = this.userRepository.findAllByUsername(username);
     if (userByName.size() == 0) {
       return null;
     }
     return userByName.get(0).getUid();
-  }*/
+  }
 }

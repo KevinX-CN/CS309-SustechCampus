@@ -21,8 +21,8 @@ public class Reservation {
   public Reservation() {
   }
 
-  public Reservation(UUID uid, String reservationItem, Date reservationTime) {
-    this.uid = uid;
+  public Reservation(String reservationItem, Date reservationTime) {
+    this.uid = null;
     this.reservationItem = reservationItem;
     this.reservationTime = reservationTime;
   }
