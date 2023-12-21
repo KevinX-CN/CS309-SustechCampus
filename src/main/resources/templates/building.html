@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Building Test Page</title>
+</head>
+<body>
+<h1 id="buildingName" th:text="${buildingName}">buildingName</h1>
+<h2 id="buildingIntroduction">buildingIntroduction</h2>
+<script>
+  const buildingName = document.getElementById("buildingName").innerText;
+  let xhr = new XMLHttpRequest();
+  xhr.open("get", "/api/building/introduction?name=" + buildingName, false);
+  xhr.send()
+  const buildingIntroduction = xhr.responseText;
+  document.getElementById("buildingIntroduction").innerText = buildingIntroduction;
+</script>
+</body>
+</html>

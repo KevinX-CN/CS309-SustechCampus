@@ -1,10 +1,14 @@
 package sustech.cs309.sustechcampus.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import sustech.cs309.sustechcampus.model.Account;
@@ -17,7 +21,9 @@ import sustech.cs309.sustechcampus.service.CommentService;
 import sustech.cs309.sustechcampus.service.ReservationService;
 
 @RestController
+@RequestMapping("/api")
 @CrossOrigin
+@Tag(name = "Apis")
 public class ApiController {
 
   private final AccountService accountService;
@@ -34,37 +40,60 @@ public class ApiController {
   }
 
   /*Account Apis*/
-  @PostMapping(value = {"/api/account/login", "/login"})
+  @PostMapping(value = "/account/login")
   public boolean postApiAccountVerify(@RequestParam(value = "username") String username,
     @RequestParam(value = "password") String password) {
     return this.accountService.verifyAccount(username, password);
   }
 
-  @PostMapping(value = {"/api/account/register", "/register"})
-  public void postApiAccountRegister(@RequestParam(value = "username") String username,
+  @PostMapping(value = "/account/register")
+  public boolean postApiAccountRegister(@RequestParam(value = "username") String username,
     @RequestParam(value = "password") String password) {
     Account account = new Account(username, password);
     this.accountService.addAccount(account);
+    return true;
   }
 
   /*Building Apis*/
-  @GetMapping(value = "/api/building")
+  @GetMapping(value = "/building/introduction")
   public String getApiBuilding(@RequestParam(value = "name") String buildingName) {
-    return this.buildingService.getBuildingByName(buildingName).toString();
+    return this.buildingService.getBuildingByName(buildingName).get().getBuildingIntroduction();
+  }
+
+  @GetMapping(value = "/building/comment")
+  public List<Comment> getApiBuildingComment(@RequestParam(value = "name") String buildingName) {
+    Building building = this.buildingService.getBuildingByName(buildingName).get();
+    List<Comment> commentList = new ArrayList<>();
+    UUID cid = building.getFirstComment();
+    while (true) {
+      Comment comment = this.commentService.getCommentById(cid).get();
+      commentList.add(comment);
+      if (comment.getNextComment() == null) {
+        break;
+      }
+      cid = comment.getNextComment();
+    }
+    return commentList;
   }
 
   /*Comment Apis*/
-  @PostMapping(value = {"/api/comment/add"})
+  @PostMapping(value = {"/comment/add"})
   public void postApiCommentAdd(@RequestParam(value = "buildingName") String buildingName,
-    @RequestParam(value = "uid") UUID uid, @RequestParam(value = "content") String commentContent) {
+    @RequestParam(value = "uid") String uid,
+    @RequestParam(value = "content") String commentContent) {
     Building building = this.buildingService.getBuildingByName(buildingName).get();
-    Comment comment = new Comment(uid, building.getBid(), commentContent, new Date());
+    Comment comment = new Comment(UUID.fromString(uid), building.getBid(), commentContent,
+      new Date());
     this.commentService.addComment(comment);
+    if(!(building.getLastComment()==null))
+    {
+      this.commentService.setNextComment(building.getLastComment(), comment.getCid());
+    }
     this.buildingService.addCommentToBuilding(building, comment);
   }
 
   /*Reservation Apis*/
-  @PostMapping(value = {"/api/reservation/add"})
+  @PostMapping(value = {"/reservation/add"})
   public void postApiReservationAdd(@RequestParam(value = "item") String reservationItem,
     @RequestParam(value = "time") Date reservationTime) {
     Reservation reservation = new Reservation(reservationItem, reservationTime);

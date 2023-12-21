@@ -1,5 +1,7 @@
 package sustech.cs309.sustechcampus.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,12 @@ public class CommentService {
   }
 
   public void addComment(Comment comment) {
+    this.commentRepository.save(comment);
+  }
+
+  public void setNextComment(UUID nowCid,UUID nextCid) {
+    Comment comment=this.commentRepository.findById(nowCid).get();
+    comment.setNextComment(nextCid);
     this.commentRepository.save(comment);
   }
 

@@ -18,6 +18,7 @@ public class BuildingService {
   @Autowired
   public BuildingService(BuildingRepository buildingRepository) {
     this.buildingRepository = buildingRepository;
+    initBuilding();
   }
 
   public Optional<Building> getBuildingByName(String buildingName) {
@@ -25,8 +26,7 @@ public class BuildingService {
     List<Building> buildingByName = this.buildingRepository.findAllByBuildingName(
       buildingName);
     if (buildingByName.size() == 1) {
-      result.of(buildingByName.get(1));
-      ;
+      result=Optional.of(buildingByName.get(0));
     }
     return result;
   }
@@ -46,13 +46,14 @@ public class BuildingService {
       building.setFirstComment(comment.getCid());
     }
     building.setLastComment(comment.getCid());
+    this.buildingRepository.save(building);
   }
 
   public void initBuilding() {
     List<Building> buildingList = new ArrayList<>();
-    buildingList.add(new Building("一教", "一教的简介", ""));
-    buildingList.add(new Building("二教", "二教的简介", ""));
-    buildingList.add(new Building("三教", "三教的简介", ""));
+    buildingList.add(new Building("一教", "一教的简介", "[<1,1>,<2,2>,<3,3>]"));
+    buildingList.add(new Building("二教", "二教的简介", "[<2,1>,<3,2>,<1,3>]"));
+    buildingList.add(new Building("三教", "三教的简介", "[<3,1>,<2,2>,<1,3>]"));
     this.buildingRepository.saveAll(buildingList);
   }
 }
