@@ -61,13 +61,13 @@ public class ApiController {
   }
 
   @GetMapping(value = "/building/comment")
-  public List<UUID> getApiBuildingComment(@RequestParam(value = "name") String buildingName) {
+  public List<Comment> getApiBuildingComment(@RequestParam(value = "name") String buildingName) {
     Building building = this.buildingService.getBuildingByName(buildingName).get();
-    List<UUID> commentList = new ArrayList<>();
+    List<Comment> commentList = new ArrayList<>();
     UUID cid = building.getFirstComment();
     while (true) {
       Comment comment = this.commentService.getCommentById(cid).get();
-      commentList.add(comment.getCid());
+      commentList.add(comment);
       if (comment.getNextComment() == null) {
         break;
       }
@@ -91,8 +91,8 @@ public class ApiController {
     this.buildingService.addCommentToBuilding(building, comment);
   }
 
-  @GetMapping(value = {"/comment/view"})
-  public Comment postApiComment(@RequestParam(value = "cid") String cid) {
+  @GetMapping(value = {"/comment/list"})
+  public Comment postApiCommentList(@RequestParam(value = "cid") String cid) {
     Comment comment = this.commentService.getCommentById(UUID.fromString(cid)).get();
     return comment;
   }
@@ -105,5 +105,16 @@ public class ApiController {
     Reservation reservation = new Reservation(reservationItem, reservationStartTime,
       reservationEndTime);
     this.reservationService.addReservation(reservation);
+  }
+
+  @GetMapping(value = {"/reservation/list"})
+  public List<Reservation> postApiReservationList() {
+    return this.reservationService.listAllReservation();
+  }
+
+  @PostMapping(value = {"/reservation/reserve"})
+  public boolean postApiReservationList(@RequestParam(value = "rid") String rid,
+    @RequestParam(value = "uid") String uid) {
+    return this.reservationService.reservationByUid(UUID.fromString(rid), UUID.fromString(uid));
   }
 }

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reservation Test Page</title>
+  <link rel="stylesheet" type="text/css" href="/styles/style.css">
+</head>
+<body>
+<h2>ReservationTable</h2>
+<p>buildingName: <input type="text" id="uid"/></p>
+<table id="reservationTable">
+  <tr>
+    <th>rid</th>
+    <th>uid</th>
+    <th>item</th>
+    <th>startTime</th>
+    <th>endTime</th>
+    <th>reserve</th>
+  </tr>
+</table>
+<script>
+  const reservationTable = document.getElementById("reservationTable");
+  let xhr = new XMLHttpRequest();
+  xhr.open("get", "/api/reservation/list", false);
+  xhr.send()
+  const reservationList = xhr.responseText;
+  for (let i of reservationList.substring(2, reservationList.length - 2).split('},{')) {
+    reservationData = i.split(",");
+    //alert(reservationData);
+    let rid = reservationData[0].split(":")[1];
+    rid = rid.substring(1, rid.length - 1);
+    let uid = reservationData[1].split(":")[1];
+    if (uid.length > 4) {
+      uid = uid.substring(1, uid.length - 1);
+    }
+    let reservationItem = reservationData[2].split(":")[1];
+    reservationItem = reservationItem.substring(1, reservationItem.length - 1);
+    let reservationStartTime = reservationData[3].split(":")[1];
+    reservationStartTime = reservationStartTime.substring(1, reservationStartTime.length - 1);
+    let reservationEndTime = reservationData[4].split(":")[1];
+    reservationEndTime = reservationEndTime.substring(1, reservationEndTime.length - 1);
+    //alert(reservationEndTime);
+    let newRowContent = "<td>" + rid + "</td>\n" +
+        "<td>" + uid + "</td>\n" +
+        "<td>" + reservationItem + "</td>\n" +
+        "<td>" + reservationStartTime + "</td>\n" +
+        "<td>" + reservationEndTime + "</td>\n" +
+        "<td>reserve</td>\n";
+    let newRow = document.createElement("tr");
+    newRow.innerHTML = newRowContent;
+    reservationTable.appendChild(newRow);
+  }
+
+  reservationTable.addEventListener("click", function TabClick() {
+    let selectedRow = event.srcElement.parentElement.rowIndex;
+    let selectedColumn = event.srcElement.cellIndex;
+    if (selectedColumn === 5) {
+      let rid = reservationTable.rows[selectedRow].cells[0].innerHTML;
+      let uid = document.getElementById("uid").value;
+      xhr.open("post", "/api/reservation/reserve");
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+      xhr.send("rid=" + rid + "&uid=" + uid);
+      alert(uid);
+      alert(rid);
+    }
+  });
+</script>
+</body>
+</html>

@@ -22,11 +22,11 @@ public class Reservation {
   public Reservation() {
   }
 
-  public Reservation(String reservationItem, Date reservationStartTime,Date reservationEndTime) {
+  public Reservation(String reservationItem, Date reservationStartTime, Date reservationEndTime) {
     this.uid = null;
     this.reservationItem = reservationItem;
     this.reservationStartTime = reservationStartTime;
-    this.reservationEndTime=reservationEndTime;
+    this.reservationEndTime = reservationEndTime;
   }
 
   public UUID getRid() {

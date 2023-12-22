@@ -15,6 +15,7 @@ public class Building {
   private UUID bid;
   private String buildingName;
   private String buildingIntroduction;
+  private String detailedInfo;
   private String buildingImgPath;
   private UUID firstComment;
   private UUID lastComment;
@@ -22,9 +23,11 @@ public class Building {
   public Building() {
   }
 
-  public Building(String buildingName, String buildingIntroduction, String buildingImgPath) {
+  public Building(String buildingName, String buildingIntroduction, String detailedInfo,
+    String buildingImgPath) {
     this.buildingName = buildingName;
     this.buildingIntroduction = buildingIntroduction;
+    this.detailedInfo=detailedInfo;
     this.buildingImgPath = buildingImgPath;
     this.firstComment = null;
     this.lastComment = null;

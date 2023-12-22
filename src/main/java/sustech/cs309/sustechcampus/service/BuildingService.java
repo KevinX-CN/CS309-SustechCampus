@@ -51,9 +51,9 @@ public class BuildingService {
 
   public void initBuilding() {
     List<Building> buildingList = new ArrayList<>();
-    buildingList.add(new Building("一教", "一教的简介", "[<1,1>,<2,2>,<3,3>]"));
-    buildingList.add(new Building("二教", "二教的简介", "[<2,1>,<3,2>,<1,3>]"));
-    buildingList.add(new Building("三教", "三教的简介", "[<3,1>,<2,2>,<1,3>]"));
+    buildingList.add(new Building("一教", "一教的简介","", "[<1,1>,<2,2>,<3,3>]"));
+    buildingList.add(new Building("二教", "二教的简介","", "[<2,1>,<3,2>,<1,3>]"));
+    buildingList.add(new Building("三教", "三教的简介","", "[<3,1>,<2,2>,<1,3>]"));
     this.buildingRepository.saveAll(buildingList);
   }
 }

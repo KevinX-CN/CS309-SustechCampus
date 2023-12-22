@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/page")
@@ -49,9 +48,13 @@ public class PageController {
     return "comment";
   }
 
-  @GetMapping(value = "/viewcomment")
-  public String getPageViewComment(Model model, @RequestParam(value = "name") String buildingName) {
-    model.addAttribute("buildingName", buildingName);
-    return "viewcomment";
+  @GetMapping(value = "/addcomment")
+  public String getPageAddcomment() {
+    return "addcomment";
+  }
+
+  @GetMapping(value = "/reservation")
+  public String getPageReservation() {
+    return "reservation";
   }
 }
