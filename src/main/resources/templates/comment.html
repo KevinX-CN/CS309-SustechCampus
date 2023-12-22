@@ -2,15 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Comment Test Page</title>
+  <title>Building Test Page</title>
+  <link rel="stylesheet" type="text/css" href="/styles/style.css">
 </head>
 <body>
-<h1>Comment</h1>
-<form method="post" action="/api/comment/add">
+<form method="get">
   <p>buildingName: <input type="text" name="buildingName"/></p>
-  <p>uid: <input type="text" name="uid"/></p>
-  <p>content: <input type="text" name="content"/></p>
-  <button type="submit">Comment</button>
+  <button type="submit">view</button>
 </form>
+<h1 id="buildingName" th:text="${buildingName}">buildingName</h1>
+<h2>CommentTable</h2>
+<table id="commentTable">
+  <tr>
+    <th>uid</th>
+    <th>content</th>
+    <th>time</th>
+  </tr>
+</table>
+<script>
+  const commentTable = document.getElementById("commentTable");
+  const buildingName = document.getElementById("buildingName").innerText;
+  let xhr = new XMLHttpRequest();
+  //alert("/api/building/comment?name=" + buildingName);
+  xhr.open("get", "/api/building/comment?name=" + buildingName, false);
+  xhr.send()
+  const commentList = xhr.responseText;
+  //alert(commentList.substring(2, commentList.length - 2));
+  for (let i of commentList.substring(2, commentList.length - 2).split('\",\"')) {
+    //alert("/api/comment/view?cid=" + i);
+    xhr.open("get", "/api/comment/view?cid=" + i, false);
+    xhr.send();
+    let commentData = xhr.responseText;
+    //alert(commentData.substring(2, commentData.length - 4));
+    commentData = commentData.substring(2, commentData.length - 2).split("\",\"");
+    const uid = commentData[1].split("\":\"")[1];
+    const commentContent = commentData[3].split("\":\"")[1];
+    //alert(commentContent);
+    const commentTime = commentData[4].split("\":\"")[1];
+    let newRowContent = "<td>" + uid + "</td>\n" +
+        "<td>" + commentContent + "</td>\n" +
+        "<td>" + commentTime + "</td>\n";
+    let newRow = document.createElement("tr");
+    newRow.innerHTML = newRowContent;
+    commentTable.appendChild(newRow);
+  }
+
+</script>
 </body>
 </html>

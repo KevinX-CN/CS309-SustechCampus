@@ -61,13 +61,13 @@ public class ApiController {
   }
 
   @GetMapping(value = "/building/comment")
-  public List<Comment> getApiBuildingComment(@RequestParam(value = "name") String buildingName) {
+  public List<UUID> getApiBuildingComment(@RequestParam(value = "name") String buildingName) {
     Building building = this.buildingService.getBuildingByName(buildingName).get();
-    List<Comment> commentList = new ArrayList<>();
+    List<UUID> commentList = new ArrayList<>();
     UUID cid = building.getFirstComment();
     while (true) {
       Comment comment = this.commentService.getCommentById(cid).get();
-      commentList.add(comment);
+      commentList.add(comment.getCid());
       if (comment.getNextComment() == null) {
         break;
       }
@@ -85,18 +85,25 @@ public class ApiController {
     Comment comment = new Comment(UUID.fromString(uid), building.getBid(), commentContent,
       new Date());
     this.commentService.addComment(comment);
-    if(!(building.getLastComment()==null))
-    {
+    if (!(building.getLastComment() == null)) {
       this.commentService.setNextComment(building.getLastComment(), comment.getCid());
     }
     this.buildingService.addCommentToBuilding(building, comment);
   }
 
+  @GetMapping(value = {"/comment/view"})
+  public Comment postApiComment(@RequestParam(value = "cid") String cid) {
+    Comment comment = this.commentService.getCommentById(UUID.fromString(cid)).get();
+    return comment;
+  }
+
   /*Reservation Apis*/
   @PostMapping(value = {"/reservation/add"})
   public void postApiReservationAdd(@RequestParam(value = "item") String reservationItem,
-    @RequestParam(value = "time") Date reservationTime) {
-    Reservation reservation = new Reservation(reservationItem, reservationTime);
+    @RequestParam(value = "time") Date reservationStartTime,
+    @RequestParam(value = "time") Date reservationEndTime) {
+    Reservation reservation = new Reservation(reservationItem, reservationStartTime,
+      reservationEndTime);
     this.reservationService.addReservation(reservation);
   }
 }

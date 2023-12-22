@@ -1,5 +1,6 @@
 package sustech.cs309.sustechcampus.controller;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,6 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/page")
 @CrossOrigin
 public class PageController {
+
+  @GetMapping("/index")
+  public String getPageIndex() {
+    return "index";
+  }
 
   @GetMapping("/login")
   public String getPageLogin() {
@@ -28,17 +34,24 @@ public class PageController {
   }
 
   @GetMapping(value = "/building")
-  public String getPageBuilding(Model model,@RequestParam(value = "name") String buildingName) {
-    model.addAttribute("buildingName",buildingName);
+  public String getPageBuilding(Model model, @Param(value = "name") String buildingName) {
+    if (buildingName != null) {
+      model.addAttribute("buildingName", buildingName);
+    }
     return "building";
   }
+
   @GetMapping(value = "/comment")
-  public String getPageComment(){
+  public String getPageComment(Model model, @Param(value = "name") String buildingName) {
+    if (buildingName != null) {
+      model.addAttribute("buildingName", buildingName);
+    }
     return "comment";
   }
+
   @GetMapping(value = "/viewcomment")
-  public String getPageViewComment(Model model,@RequestParam(value = "name") String buildingName) {
-    model.addAttribute("buildingName",buildingName);
+  public String getPageViewComment(Model model, @RequestParam(value = "name") String buildingName) {
+    model.addAttribute("buildingName", buildingName);
     return "viewcomment";
   }
 }

@@ -16,15 +16,17 @@ public class Reservation {
   private UUID rid;
   private UUID uid;
   private String reservationItem;
-  private Date reservationTime;
+  private Date reservationStartTime;
+  private Date reservationEndTime;
 
   public Reservation() {
   }
 
-  public Reservation(String reservationItem, Date reservationTime) {
+  public Reservation(String reservationItem, Date reservationStartTime,Date reservationEndTime) {
     this.uid = null;
     this.reservationItem = reservationItem;
-    this.reservationTime = reservationTime;
+    this.reservationStartTime = reservationStartTime;
+    this.reservationEndTime=reservationEndTime;
   }
 
   public UUID getRid() {
@@ -47,11 +49,19 @@ public class Reservation {
     this.reservationItem = reservationItem;
   }
 
-  public Date getReservationTime() {
-    return reservationTime;
+  public Date getReservationStartTime() {
+    return reservationStartTime;
   }
 
-  public void setReservationTime(Date reservationTime) {
-    this.reservationTime = reservationTime;
+  public void setReservationStartTime(Date reservationStartTime) {
+    this.reservationStartTime = reservationStartTime;
+  }
+
+  public Date getReservationEndTime() {
+    return reservationEndTime;
+  }
+
+  public void setReservationEndTime(Date reservationEndTime) {
+    this.reservationEndTime = reservationEndTime;
   }
 }
