@@ -26,7 +26,7 @@ public class BuildingService {
     List<Building> buildingByName = this.buildingRepository.findAllByBuildingName(
       buildingName);
     if (buildingByName.size() == 1) {
-      result=Optional.of(buildingByName.get(0));
+      result = Optional.of(buildingByName.get(0));
     }
     return result;
   }
@@ -49,11 +49,17 @@ public class BuildingService {
     this.buildingRepository.save(building);
   }
 
+  public void editBuildingByName(String buildingName, String buildingIntroduction) {
+    Building building = getBuildingByName(buildingName).get();
+    building.setBuildingIntroduction(buildingIntroduction);
+    this.buildingRepository.save(building);
+  }
+
   public void initBuilding() {
     List<Building> buildingList = new ArrayList<>();
-    buildingList.add(new Building("一教", "一教的简介","", "[<1,1>,<2,2>,<3,3>]"));
-    buildingList.add(new Building("二教", "二教的简介","", "[<2,1>,<3,2>,<1,3>]"));
-    buildingList.add(new Building("三教", "三教的简介","", "[<3,1>,<2,2>,<1,3>]"));
+    buildingList.add(new Building("一教", "一教的简介", "", "[<1,1>,<2,2>,<3,3>]"));
+    buildingList.add(new Building("二教", "二教的简介", "", "[<2,1>,<3,2>,<1,3>]"));
+    buildingList.add(new Building("三教", "三教的简介", "", "[<3,1>,<2,2>,<1,3>]"));
     this.buildingRepository.saveAll(buildingList);
   }
 }

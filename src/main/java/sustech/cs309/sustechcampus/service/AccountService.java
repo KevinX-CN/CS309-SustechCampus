@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sustech.cs309.sustechcampus.model.Account;
-import sustech.cs309.sustechcampus.model.Building;
 import sustech.cs309.sustechcampus.repository.AccountRepository;
 
 @Service
@@ -20,20 +19,27 @@ public class AccountService {
     initAccount();
   }
 
-  public void addAccount(Account account) {
+  public boolean addAccount(Account account) {
     List<Account> userByName = this.accountRepository.findAllByUsername(account.getUserName());
-    if (userByName.size() > 0) {
-      return;
-    }
-    this.accountRepository.save(account);
-  }
-
-  public boolean verifyAccount(String username, String password) {
-    List<Account> userByName = this.accountRepository.findAllByUsername(username);
     if (userByName.size() == 0) {
+      this.accountRepository.save(account);
+      return true;
+    } else {
       return false;
     }
-    return userByName.get(0).verifyPassword(password);
+  }
+
+  public UUID verifyAccount(String username, String password) {
+    List<Account> accountByName = this.accountRepository.findAllByUsername(username);
+    if (accountByName.size() != 1) {
+      return null;
+    }
+    Account account = accountByName.get(0);
+    if (account.verifyPassword(password)) {
+      return account.getUid();
+    } else {
+      return null;
+    }
   }
 
   public UUID getUidByUsername(String username) {

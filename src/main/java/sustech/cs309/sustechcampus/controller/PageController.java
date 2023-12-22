@@ -57,4 +57,12 @@ public class PageController {
   public String getPageReservation() {
     return "reservation";
   }
+
+  @GetMapping(value = "/admin")
+  public String getAdmin(Model model, @Param(value = "name") String buildingName) {
+    if (buildingName != null) {
+      model.addAttribute("buildingName", buildingName);
+    }
+    return "admin";
+  }
 }

@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,22 +44,38 @@ public class ApiController {
 
   /*Account Apis*/
   @PostMapping(value = "/account/login")
-  public boolean postApiAccountVerify(@RequestParam(value = "username") String username,
+  public boolean postApiAccountVerify(HttpServletResponse response,
+    @RequestParam(value = "username") String username,
     @RequestParam(value = "password") String password) {
-    return this.accountService.verifyAccount(username, password);
+    UUID uid = this.accountService.verifyAccount(username, password);
+    if (uid == null) {
+      return false;
+    } else {
+      Cookie cookie = new Cookie("uid", uid.toString());
+      cookie.setPath("/");
+      response.addCookie(cookie);
+      return true;
+    }
   }
 
   @PostMapping(value = "/account/register")
-  public boolean postApiAccountRegister(@RequestParam(value = "username") String username,
+  public boolean postApiAccountRegister(HttpServletResponse response,
+    @RequestParam(value = "username") String username,
     @RequestParam(value = "password") String password) {
     Account account = new Account(username, password);
-    this.accountService.addAccount(account);
-    return true;
+    if (this.accountService.addAccount(account)) {
+      Cookie cookie = new Cookie("uid", account.getUid().toString());
+      cookie.setDomain("/");
+      response.addCookie(cookie);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /*Building Apis*/
   @GetMapping(value = "/building/introduction")
-  public String getApiBuilding(@RequestParam(value = "name") String buildingName) {
+  public String getApiBuildingIntroduction(@RequestParam(value = "name") String buildingName) {
     return this.buildingService.getBuildingByName(buildingName).get().getBuildingIntroduction();
   }
 
@@ -76,10 +95,16 @@ public class ApiController {
     return commentList;
   }
 
+  @PostMapping(value = "/building/edit")
+  public void postApiBuildingEdit(@RequestParam(value = "name") String buildingName,
+    @RequestParam(value = "introduction") String buildingIntroduction) {
+    this.buildingService.editBuildingByName(buildingName, buildingIntroduction);
+  }
+
   /*Comment Apis*/
   @PostMapping(value = {"/comment/add"})
-  public void postApiCommentAdd(@RequestParam(value = "buildingName") String buildingName,
-    @RequestParam(value = "uid") String uid,
+  public void postApiCommentAdd(@CookieValue(value = "uid") String uid,
+    @RequestParam(value = "buildingName") String buildingName,
     @RequestParam(value = "content") String commentContent) {
     Building building = this.buildingService.getBuildingByName(buildingName).get();
     Comment comment = new Comment(UUID.fromString(uid), building.getBid(), commentContent,
@@ -113,8 +138,8 @@ public class ApiController {
   }
 
   @PostMapping(value = {"/reservation/reserve"})
-  public boolean postApiReservationList(@RequestParam(value = "rid") String rid,
-    @RequestParam(value = "uid") String uid) {
+  public boolean postApiReservationList(@CookieValue(value = "uid") String uid,
+    @RequestParam(value = "rid") String rid) {
     return this.reservationService.reservationByUid(UUID.fromString(rid), UUID.fromString(uid));
   }
 }
