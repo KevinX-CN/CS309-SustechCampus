@@ -1,0 +1,68 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    width: 100%; /* 头部宽度占满整个视口宽度 */
+    height: 33.33vh; /* 头部高度占据视口高度的三分之一 */
+    position: relative; /* 如果您需要在头部内部定位其他元素，可能会用到相对定位 */
+    overflow: hidden; /* 如果图片比容器大，这会防止溢出的部分显示出来 */
+}
+
+.header-image {
+    width: 100%; /* 图片宽度占满.header容器 */
+    height: 43.33vh; /* 图片高度同样占据视口高度的三分之一 */
+    object-fit: cover; /* 图片会覆盖整个容器区域，而且会保持宽高比 */
+    object-position: bottom; /* 图片会在容器中居中显示 */
+}
+
+
+/* 调整导航栏样式 */
+.topnav {
+    text-align: center; /* 使链接居中 */
+    background-color: rgba(0, 0, 0, 0);
+    padding: 10px 0; /* 或者您需要的任何垂直内边距 */
+}
+
+/* 调整链接样式 */
+.topnav a {
+    display: inline-block; /* 代替float */
+    color: #090909;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+
+.main-content {
+    max-width: 1000px; /* 或您需要的任何宽度 */
+    margin: 0 auto; /* 这会居中.main-content */
+    padding: 25px; /* 您可能需要一些内边距 */
+}
+
+.content-section {
+    text-align: center; /* 标题和文本居中 */
+}
+
+.content-section .more-link {
+    display: block; /* 使链接显示为块级元素以占据整行 */
+    margin-bottom: 20px; /* 或您所需的任何值 */
+    color: #0066cc; /* 链接颜色 */
+    text-decoration: none; /* 去掉下划线 */
+}
+
+
+
+hr {
+    margin-top: 30px;
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}

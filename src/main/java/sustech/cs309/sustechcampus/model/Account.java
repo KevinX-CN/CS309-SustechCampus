@@ -10,11 +10,20 @@ import javax.persistence.Table;
 @Table
 public class Account {
 
+  enum authorityType {
+    Admin,
+    User,
+    Banned
+  }
+
+  ;
+
   @Id
   @GeneratedValue
   private UUID uid;
   private String username;
   private String password;
+  authorityType authority;
 
   public Account() {
   }
@@ -22,6 +31,7 @@ public class Account {
   public Account(String username, String password) {
     this.username = username;
     this.password = password;
+    this.authority = authorityType.User;
   }
 
   public UUID getUid() {

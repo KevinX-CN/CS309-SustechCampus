@@ -16,21 +16,25 @@ public class Building {
   private String buildingName;
   private String buildingIntroduction;
   private String detailedInfo;
-  private String buildingImgPath;
+  private String buildingGroup;
   private UUID firstComment;
   private UUID lastComment;
+  private UUID firstPicture;
+  private UUID lastPicture;
 
   public Building() {
   }
 
   public Building(String buildingName, String buildingIntroduction, String detailedInfo,
-    String buildingImgPath) {
+    String buildingGroup) {
     this.buildingName = buildingName;
     this.buildingIntroduction = buildingIntroduction;
-    this.detailedInfo=detailedInfo;
-    this.buildingImgPath = buildingImgPath;
+    this.detailedInfo = detailedInfo;
+    this.buildingGroup = buildingGroup;
     this.firstComment = null;
     this.lastComment = null;
+    this.firstPicture = null;
+    this.lastPicture = null;
   }
 
   public UUID getBid() {
@@ -53,12 +57,20 @@ public class Building {
     this.buildingIntroduction = buildingIntroduction;
   }
 
-  public String getBuildingImgPath() {
-    return buildingImgPath;
+  public String getDetailedInfo() {
+    return detailedInfo;
   }
 
-  public void setBuildingImgPath(String buildingImgPath) {
-    this.buildingImgPath = buildingImgPath;
+  public void setDetailedInfo(String detailedInfo) {
+    this.detailedInfo = detailedInfo;
+  }
+
+  public String getBuildingGroup() {
+    return buildingGroup;
+  }
+
+  public void setBuildingGroup(String buildingGroup) {
+    this.buildingGroup = buildingGroup;
   }
 
   public UUID getFirstComment() {
@@ -75,5 +87,21 @@ public class Building {
 
   public void setLastComment(UUID lastComment) {
     this.lastComment = lastComment;
+  }
+
+  public UUID getFirstPicture() {
+    return firstPicture;
+  }
+
+  public void setFirstPicture(UUID firstPicture) {
+    this.firstPicture = firstPicture;
+  }
+
+  public UUID getLastPicture() {
+    return lastPicture;
+  }
+
+  public void setLastPicture(UUID lastPicture) {
+    this.lastPicture = lastPicture;
   }
 }

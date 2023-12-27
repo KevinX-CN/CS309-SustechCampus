@@ -74,7 +74,7 @@ public class ApiController {
   }
 
   /*Building Apis*/
-  @GetMapping(value = "/building/introduction")
+  @GetMapping(value = "/building/introduction", produces = "text/plain;charset=UTF-8")
   public String getApiBuildingIntroduction(@RequestParam(value = "name") String buildingName) {
     return this.buildingService.getBuildingByName(buildingName).get().getBuildingIntroduction();
   }

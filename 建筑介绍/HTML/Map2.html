@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8' />
+    <title>Map2</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css' type='text/css' />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    </style>
+</head>
+<body>
+<div style="position: relative; height: 100vh;">
+    <div id='map' style="position: absolute; top: 0; bottom: 0; width: 100%;"></div>
+    <div style="position: absolute; top: 10px; left: 10px; z-index: 1;">
+        <input type="text" id="searchBox" placeholder="搜索建筑...">
+        <button id="searchButton">搜索</button>
+    </div>
+    <div id="zoom-level" style="position: absolute; top: 50px; left: 10px; z-index: 1; background: white; padding: 5px; border-radius: 5px; box-shadow: 0 0 5px rgba(0,0,0,0.3);">
+        Zoom Level: 16
+    </div>
+</div>
+
+<style>
+    /* 确保地图和缩放级别显示不被遮挡 */
+    #zoom-level {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 1; /* 确保在地图之上 */
+        background: white;
+        padding: 5px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+</style>
+
+<script type="module">
+    import { Layer1_1 , Layer1_2 , Layer1_3 } from '../JS/TeachingBuilding.js';
+    import {Layer2_1 , Layer2_2 , Layer2_3} from '../JS/Dormitory.js'
+    import {Layer3_1 , Layer3_2 , Layer3_3,
+        Layer3_4_1 , Layer3_4_2 , Layer3_4_3,
+        Layer3_5 , Layer3_6 , Layer3_7, Layer3_8,Layer3_9,Source1,Layer3_1_L,Source2,Layer3_2_L,Source3,Layer3_3_L} from '../JS/Canteen.js';
+    import { Layer4_1,Layer4_2,Layer4_3,
+        Layer4_4,Layer4_5,Layer4_6,
+        Layer4_7,Layer4_8,Layer4_9 } from '../JS/College.js';
+    import {Layer5_1,Layer5_2,Layer5_3,
+        Layer5_4,Layer5_5,Layer5_6} from '../JS/Gym.js';
+    import {Layer6_1,Layer6_2,Layer6_3,} from '../JS/Library.js';
+    import {Layer7_1,Layer7_2,Layer7_3,
+        Layer7_4,Layer7_5,Layer7_6,
+        Layer7_7,Layer7_8} from '../JS/Other.js';
+
+
+
+
+    mapboxgl.accessToken = 'pk.eyJ1Ijoia2lkNDU2IiwiYSI6ImNsbzE5bDhicTFsNTQyam1jOGpiM2o5dGkifQ.83sSyCg3T5yBZi6qvmgqBA';
+
+    var buildings = {
+        '中心餐厅': [113.99285, 22.59963],
+        '湖畔餐厅': [113.99251, 22.60025],
+        '九栋餐厅': [113.99371, 22.60477],
+        // ...更多建筑...
+    };
+    //创建地图
+    var map = new mapboxgl.Map({
+        container: 'map', // container ID
+        style: 'mapbox://styles/mapbox/light-v10', // style URL
+        center: [113.99286, 22.599965], // 指定的起始位置
+        zoom: 16 // 起始缩放级别
+    });
+
+    document.getElementById('searchButton').addEventListener('click', function() {
+        var searchQuery = document.getElementById('searchBox').value;
+        var buildingCoords = buildings[searchQuery];
+        if (buildingCoords) {
+            map.flyTo({
+                center: buildingCoords,
+                zoom: 17
+            });
+        } else {
+            alert('未找到建筑物');
+        }
+    });
+    map.on('load', function() {
+        //显示经纬度（调试用）
+        map.on('click', function(e) {
+            // 获取点击位置的经纬度坐标
+            var coordinates = e.lngLat;
+
+            // 创建一个弹出窗口并设置其内容为经纬度坐标
+            new mapboxgl.Popup()
+                .setLngLat(coordinates)
+                .setHTML('经度: ' + coordinates.lng.toFixed(5) + '<br>纬度: ' + coordinates.lat.toFixed(5))
+                .addTo(map);
+        });
+
+
+        // 点击事件监听器
+        map.on('click', function(e) {
+            // 检查是否点击了特定的图层
+            var features = map.queryRenderedFeatures(e.point, {
+                layers: ['hupancanting', 'zhongxincanting'] // 使用图层ID数组
+            });
+
+            if (features.length) {
+                var layerId = features[0].layer.id;
+                var url = 'https://www.sustech.edu.cn/zh/about.html';
+
+                // 根据点击的图层ID添加锚点到URL
+                if (layerId === 'hupancanting') {
+                    url += '#section-hupancanting';
+                } else if (layerId === 'zhongxincanting') {
+                    url += '#section-hupancanting2';
+                }
+
+                window.open(url, '_blank');
+            }
+        });
+
+
+
+//TeachingBuilding
+        map.addLayer(Layer1_1);
+        map.addLayer(Layer1_2);
+        map.addLayer(Layer1_3);
+//Dormitory
+        map.addLayer(Layer2_1);
+        map.addLayer(Layer2_2);
+        map.addLayer(Layer2_3);
+
+//Canteen
+        map.addLayer(Layer3_1);
+
+
+        map.addLayer(Layer3_2);
+        map.addLayer(Layer3_3);
+        map.addLayer(Layer3_4_1);
+        map.addLayer(Layer3_4_2);
+        map.addLayer(Layer3_4_3);
+        map.addLayer(Layer3_5);
+        map.addLayer(Layer3_6);
+        map.addLayer(Layer3_7);
+        map.addLayer(Layer3_8);
+        map.addLayer(Layer3_9);
+
+        map.addSource('label3_1', Source1);
+        map.addLayer(Layer3_1_L)
+        map.addSource('label3_2', Source2);
+        map.addLayer(Layer3_2_L)
+        map.addSource('label3_3', Source3);
+        map.addLayer(Layer3_3_L)
+
+//College
+        map.addLayer(Layer4_1);
+        map.addLayer(Layer4_2);
+        map.addLayer(Layer4_3);
+        map.addLayer(Layer4_4);
+        map.addLayer(Layer4_5);
+        map.addLayer(Layer4_6);
+        map.addLayer(Layer4_7);
+        map.addLayer(Layer4_8);
+        map.addLayer(Layer4_9);
+
+//Gym
+        map.addLayer(Layer5_1);
+        map.addLayer(Layer5_2);
+        map.addLayer(Layer5_3);
+        map.addLayer(Layer5_4);
+        map.addLayer(Layer5_5);
+        map.addLayer(Layer5_6);
+
+//Library
+        map.addLayer(Layer6_1);
+        map.addLayer(Layer6_2);
+        map.addLayer(Layer6_3);
+
+//Other
+
+        map.addLayer(Layer7_1);
+        map.addLayer(Layer7_2);
+        map.addLayer(Layer7_3);
+        map.addLayer(Layer7_4);
+        map.addLayer(Layer7_5);
+        map.addLayer(Layer7_6);
+        map.addLayer(Layer7_7);
+        map.addLayer(Layer7_8);
+
+        updateZoomLevel();
+
+    });
+
+    function updateZoomLevel() {
+        var zoomLevel = map.getZoom();
+        document.getElementById('zoom-level').innerHTML = 'Zoom Level: ' + zoomLevel.toFixed(2);
+    }
+
+    map.on('zoom', updateZoomLevel);
+
+</script>
+</body>
+</html>

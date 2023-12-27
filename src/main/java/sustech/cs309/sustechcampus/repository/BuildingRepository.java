@@ -7,4 +7,5 @@ import sustech.cs309.sustechcampus.model.Building;
 
 public interface BuildingRepository extends JpaRepository<Building, UUID> {
   List<Building> findAllByBuildingName(String buildingName);
+  List<Building> findAllByBuildingGroup(String buildingGroup);
 }

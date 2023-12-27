@@ -1,0 +1,93 @@
+.header {
+    width: 100%; /* 头部宽度占满整个视口宽度 */
+    height: 33.33vh; /* 头部高度占据视口高度的三分之一 */
+    position: relative; /* 如果您需要在头部内部定位其他元素，可能会用到相对定位 */
+    overflow: hidden; /* 如果图片比容器大，这会防止溢出的部分显示出来 */
+}
+
+.header-image {
+    width: 100%; /* 图片宽度占满.header容器 */
+    height: 33.33vh; /* 图片高度同样占据视口高度的三分之一 */
+    object-fit: cover; /* 图片会覆盖整个容器区域，而且会保持宽高比 */
+    object-position: center; /* 图片会在容器中居中显示 */
+}
+
+/* 调整导航栏样式 */
+.topnav {
+    text-align: center; /* 使链接居中 */
+    background-color: #333;
+    padding: 10px 0; /* 或者您需要的任何垂直内边距 */
+
+}
+
+/* 调整链接样式 */
+.topnav a {
+    display: inline-block; /* 代替float */
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* 公共样式 */
+.main-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.restaurant-section {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.section-content {
+    /* ...其他样式... */
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff; /* 添加背景色 */
+    border-radius: 8px; /* 圆角边框 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+    padding: 20px; /* 内边距 */
+    margin-bottom: 20px; /* 和下一个section的间距 */
+}
+
+.section-image {
+    width: 30%;
+    height: auto;
+    border-radius: 4px; /* 图片也添加圆角 */
+}
+
+.section-description, .section-comments {
+
+    width: 30%;
+    margin: 0 10px;
+}
+
+@media (max-width: 768px) {
+    .section-content {
+        flex-direction: column;
+    }
+
+    .section-image {
+        width: 100%; /* 图片宽度在移动设备上占满 */
+    }
+
+    .section-description, .section-comments {
+        width: 100%; /* 描述和评论在移动设备上占满 */
+        margin: 10px 0; /* 调整间隔 */
+    }
+
+    .restaurant-section {
+        width: 95%; /* 在移动设备上留更少的边缘空间 */
+    }
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8' />
+    <title>Simple Mapbox Map</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    </style>
+</head>
+<body>
+<div id='map'></div>
+
+<script>
+
+    mapboxgl.accessToken = 'pk.eyJ1Ijoia2lkNDU2IiwiYSI6ImNsbzE5bDhicTFsNTQyam1jOGpiM2o5dGkifQ.83sSyCg3T5yBZi6qvmgqBA';
+    //创建地图
+    const map = new mapboxgl.Map({
+        container: 'map', // container ID
+        style: 'mapbox://styles/mapbox/standard', // style URL
+        center: [113.99286, 22.599965], // 指定的起始位置
+        zoom: 16 // 起始缩放级别
+    });
+
+    map.on('load', function() {
+        //显示经纬度（调试用）
+        map.on('click', function(e) {
+            // 获取点击位置的经纬度坐标
+            const coordinates = e.lngLat;
+
+            // 创建一个弹出窗口并设置其内容为经纬度坐标
+            new mapboxgl.Popup()
+                .setLngLat(coordinates)
+                .setHTML('经度: ' + coordinates.lng.toFixed(5) + '<br>纬度: ' + coordinates.lat.toFixed(5))
+                .addTo(map);
+        });
+
+    });
+
+
+</script>
+</body>
+</html>
