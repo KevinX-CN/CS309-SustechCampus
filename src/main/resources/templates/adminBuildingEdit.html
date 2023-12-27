@@ -9,17 +9,21 @@
 <div th:insert="${header}">header</div>
 
 <div class="main-content">
-  <section id="section1" class="restaurant-section">
-    <h2 th:text="${name}">buildingName</h2>
-    <div class="section-content">
-      <img
-          src="https://raw.githubusercontent.com/aplacalike9050/CS309/main/%E9%A4%90%E5%8E%85%E8%B6%85%E5%B8%82/%E8%A5%BF%E9%A4%90%E5%8E%85.png"
-          alt="Restaurant 1 Image" class="section-image">
-      <div class="section-description" th:text="${introduction}">buildingIntroduction</div>
-      <div class="section-comments">西餐厅的评论区</div>
+  <form action="/api/admin/building/edit" method="post">
+    <div>oldName:
+      <input type="text" th:value="${name}" name="oldName" readonly="readonly">
     </div>
-    <hr>
-  </section>
+    <div>name:
+      <input type="text" th:value="${name}" name="name">
+    </div>
+    <div>introduction:
+      <input type="text" th:value="${introduction}" name="introduction">
+    </div>
+    <div>group:
+      <input type="text" th:value="${group}" name="group">
+    </div>
+    <input type="submit">
+  </form>
 </div>
 <script>
   const buildingName = document.getElementById("name1").innerText;

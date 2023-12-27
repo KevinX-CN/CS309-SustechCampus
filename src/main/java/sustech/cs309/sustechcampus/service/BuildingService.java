@@ -34,6 +34,10 @@ public class BuildingService {
     return this.buildingRepository.findAllByBuildingGroup(buildingGroup);
   }
 
+  public List<String> getAllGroup() {
+    return this.buildingRepository.findAll().stream().map(Building::getBuildingGroup).distinct()
+      .toList();
+  }
 
   public Optional<UUID> addBuilding(Building building) {
     Optional<UUID> result = Optional.empty();
@@ -52,9 +56,11 @@ public class BuildingService {
     this.buildingRepository.save(building);
   }
 
-  public void editBuildingByName(String buildingName, String buildingIntroduction) {
-    Building building = getBuildingByName(buildingName).get();
-    building.setBuildingIntroduction(buildingIntroduction);
+  public void editBuildingByName(String oldName,String name, String introduction, String group) {
+    Building building = this.getBuildingByName(oldName).get();
+    building.setBuildingName(name);
+    building.setDetailedInfo(introduction);
+    building.setBuildingGroup(group);
     this.buildingRepository.save(building);
   }
 

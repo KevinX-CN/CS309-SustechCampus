@@ -95,10 +95,13 @@ public class ApiController {
     return commentList;
   }
 
-  @PostMapping(value = "/building/edit")
-  public void postApiBuildingEdit(@RequestParam(value = "name") String buildingName,
-    @RequestParam(value = "introduction") String buildingIntroduction) {
-    this.buildingService.editBuildingByName(buildingName, buildingIntroduction);
+  @PostMapping(value = "/admin/building/edit")
+  public boolean postApiBuildingEdit(@RequestParam(value = "oldName") String oldName,
+    @RequestParam(value = "name") String name,
+    @RequestParam(value = "introduction") String introduction,
+    @RequestParam(value = "group") String group) {
+    this.buildingService.editBuildingByName(oldName, name, introduction, group);
+    return true;
   }
 
   /*Comment Apis*/

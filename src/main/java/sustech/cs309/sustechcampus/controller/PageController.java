@@ -1,6 +1,8 @@
 package sustech.cs309.sustechcampus.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,11 +62,12 @@ public class PageController {
   public String getPageBuilding(Model model, @Param(value = "name") String name) {
     model.addAttribute("header", getHeader());
     if (name != null) {
-      model.addAttribute("buildingName", name);
-      model.addAttribute("buildingIntroduction",
-        this.buildingService.getBuildingByName(name).get().getDetailedInfo());
-    } else {
-      return null;
+      Building building = this.buildingService.getBuildingByName(name).get();
+      model.addAttribute("name", name);
+      model.addAttribute("introduction",
+        building.getDetailedInfo());
+      model.addAttribute("group",
+        building.getBuildingGroup());
     }
     return "building";
   }
@@ -104,9 +107,32 @@ public class PageController {
 
   @GetMapping(value = "/admin")
   public String getAdmin(Model model, @Param(value = "name") String buildingName) {
+    model.addAttribute("header", getHeader());
     if (buildingName != null) {
       model.addAttribute("buildingName", buildingName);
     }
     return "admin";
+  }
+
+  @GetMapping(value = "/admin/building")
+  public String getAdminBuilding(Model model, @Param(value = "name") String name) {
+    model.addAttribute("header", getHeader());
+    if (name != null) {
+      Building building = this.buildingService.getBuildingByName(name).get();
+      model.addAttribute("name", name);
+      model.addAttribute("introduction",
+        building.getDetailedInfo());
+      model.addAttribute("group",
+        building.getBuildingGroup());
+      return "adminBuildingEdit";
+    } else {
+      List<String> groupList = this.buildingService.getAllGroup();
+      Map<String, List<Building>> buildingByGroup = new HashMap<>();
+      for (String group : groupList) {
+        buildingByGroup.put(group, this.buildingService.getBuildingByGroup(group));
+      }
+      model.addAttribute("buildingByGroup", buildingByGroup);
+      return "adminBuildingList";
+    }
   }
 }
