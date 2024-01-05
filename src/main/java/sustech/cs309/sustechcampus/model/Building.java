@@ -14,27 +14,29 @@ public class Building {
   @GeneratedValue
   private UUID bid;
   private String buildingName;
-  private String buildingIntroduction;
+  private String briefInfo;
   private String detailedInfo;
   private String buildingGroup;
   private UUID firstComment;
   private UUID lastComment;
-  private UUID firstPicture;
-  private UUID lastPicture;
+  private String picturePath;
+  private double centerX;
+  private double centerY;
 
   public Building() {
   }
 
-  public Building(String buildingName, String buildingIntroduction, String detailedInfo,
-    String buildingGroup) {
+  public Building(String buildingName, String briefInfo, String detailedInfo,
+    String buildingGroup, String picturePath, double centerX, double centerY) {
     this.buildingName = buildingName;
-    this.buildingIntroduction = buildingIntroduction;
+    this.briefInfo = briefInfo;
     this.detailedInfo = detailedInfo;
     this.buildingGroup = buildingGroup;
+    this.picturePath = picturePath;
+    this.centerX=centerX;
+    this.centerY=centerY;
     this.firstComment = null;
     this.lastComment = null;
-    this.firstPicture = null;
-    this.lastPicture = null;
   }
 
   public UUID getBid() {
@@ -49,12 +51,12 @@ public class Building {
     this.buildingName = buildingName;
   }
 
-  public String getBuildingIntroduction() {
-    return buildingIntroduction;
+  public String getBriefInfo() {
+    return briefInfo;
   }
 
-  public void setBuildingIntroduction(String buildingIntroduction) {
-    this.buildingIntroduction = buildingIntroduction;
+  public void setBriefInfo(String briefInfo) {
+    this.briefInfo = briefInfo;
   }
 
   public String getDetailedInfo() {
@@ -89,19 +91,27 @@ public class Building {
     this.lastComment = lastComment;
   }
 
-  public UUID getFirstPicture() {
-    return firstPicture;
+  public String getPicturePath() {
+    return picturePath;
   }
 
-  public void setFirstPicture(UUID firstPicture) {
-    this.firstPicture = firstPicture;
+  public void setPicturePath(String picturePath) {
+    this.picturePath = picturePath;
   }
 
-  public UUID getLastPicture() {
-    return lastPicture;
+  public double getCenterX() {
+    return centerX;
   }
 
-  public void setLastPicture(UUID lastPicture) {
-    this.lastPicture = lastPicture;
+  public void setCenterX(double centerX) {
+    this.centerX = centerX;
+  }
+
+  public double getCenterY() {
+    return centerY;
+  }
+
+  public void setCenterY(double centerY) {
+    this.centerY = centerY;
   }
 }

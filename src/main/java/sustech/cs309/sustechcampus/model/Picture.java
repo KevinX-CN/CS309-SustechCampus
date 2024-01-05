@@ -23,4 +23,23 @@ public class Picture {
     this.path = path;
   }
 
+  public UUID getPid() {
+    return pid;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
+
+  public UUID getNextPid() {
+    return nextPid;
+  }
+
+  public void setNextPid(UUID nextPid) {
+    this.nextPid = nextPid;
+  }
 }

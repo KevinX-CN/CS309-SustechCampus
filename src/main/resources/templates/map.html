@@ -1,10 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Map Test Page</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+  <style type="text/css">
+    body, html, #allmap {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      margin: 0;
+    }
+  </style>
+  <script type="text/javascript"
+          src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=MkpjGqT1EmAtuWLIeoGkG20lINY2Kanc"></script>
+  <title>设置地图3D视角</title>
 </head>
 <body>
-<h1>Map</h1>
+<div id="allmap"></div>
 </body>
 </html>
+<script type="text/javascript" th:inline="javascript">
+  var map = new BMapGL.Map("allmap");
+  map.centerAndZoom(new BMapGL.Point(114.005913, 22.603944), 17);
+  map.enableScrollWheelZoom(true);
+  map.setMapType(BMAP_EARTH_MAP);
+  map.setHeading(90);
+  map.setTilt(50);
+  var myArray = [[${building}]]; // 注意此处为Thymeleaf表达式，会被动态地替换为Java List类型的值
+
+  // Thymeleaf JS array traversal using #lists object
+  myArray.forEach(function(building) {
+    var marker = new BMapGL.Marker(new BMapGL.Point(building.centerX, building.centerY));
+    map.addOverlay(marker);
+    var opts = {
+      width: 200,
+      height: 100,
+      title: building.buildingName
+    };
+    var infoWindow = new BMapGL.InfoWindow(
+        building.briefInfo+"<a href=\"/page/building?name="+building.buildingName+"\">更多>></a>", opts);
+    // 点标记添加点击事件
+    marker.addEventListener('click', function () {
+      map.openInfoWindow(infoWindow, new BMapGL.Point(building.centerX, building.centerY)); // 开启信息窗口
+    });
+  });
+
+</script>

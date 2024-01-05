@@ -6,12 +6,17 @@
   <link rel="stylesheet" type="text/css" href="/styles/style.css">
 </head>
 <body>
+<div th:insert="${header}">header</div>
 <h2>ReservationTable</h2>
-<p>buildingName: <input type="text" id="uid"/></p>
+<form method="post" action="/page/reservation">
+  <p>building: <input type="text" name="building"/></p>
+  <p>item: <input type="text" name="item"/></p>
+  <button type="submit">Search</button>
+</form>
 <table id="reservationTable">
   <tr>
     <th>rid</th>
-    <th>uid</th>
+    <th>building</th>
     <th>item</th>
     <th>startTime</th>
     <th>endTime</th>
@@ -39,9 +44,11 @@
     reservationStartTime = reservationStartTime.substring(1, reservationStartTime.length - 1);
     let reservationEndTime = reservationData[4].split(":")[1];
     reservationEndTime = reservationEndTime.substring(1, reservationEndTime.length - 1);
+    let reservationBuilding = reservationData[5].split(":")[1];
+    reservationBuilding = reservationBuilding.substring(1, reservationEndTime.length - 1);
     //alert(reservationEndTime);
     let newRowContent = "<td>" + rid + "</td>\n" +
-        "<td>" + uid + "</td>\n" +
+        "<td>" + reservationBuilding + "</td>\n";
         "<td>" + reservationItem + "</td>\n" +
         "<td>" + reservationStartTime + "</td>\n" +
         "<td>" + reservationEndTime + "</td>\n" +

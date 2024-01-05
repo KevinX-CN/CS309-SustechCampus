@@ -43,9 +43,12 @@ public class ReservationService {
 
   public void initReservation() {
     List<Reservation> reservationList = new ArrayList<>();
-    reservationList.add(new Reservation("猪脚饭", new Date(124, 0, 1), new Date(124, 0, 1)));
-    reservationList.add(new Reservation("鸡脚饭", new Date(124, 0, 1), new Date(124, 0, 1)));
-    reservationList.add(new Reservation("牛脚饭", new Date(124, 0, 1), new Date(124, 0, 1)));
+    reservationList.add(new Reservation("猪脚饭", new Date(124, 0, 1), new Date(124, 0, 1),"中心食堂"));
+    reservationList.add(new Reservation("鸡脚饭", new Date(124, 0, 1), new Date(124, 0, 1),"中心食堂"));
+    reservationList.add(new Reservation("牛脚饭", new Date(124, 0, 1), new Date(124, 0, 1),"中心食堂"));
+    reservationList.add(new Reservation("猪脚饭", new Date(124, 0, 1), new Date(124, 0, 1),"第二学生食堂"));
+    reservationList.add(new Reservation("鸡脚饭", new Date(124, 0, 1), new Date(124, 0, 1),"第二学生食堂"));
+    reservationList.add(new Reservation("牛脚饭", new Date(124, 0, 1), new Date(124, 0, 1),"第二学生食堂"));
     this.reservationRepository.saveAll(reservationList);
   }
 }

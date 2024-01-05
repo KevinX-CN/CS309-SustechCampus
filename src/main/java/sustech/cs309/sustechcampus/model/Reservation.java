@@ -18,15 +18,17 @@ public class Reservation {
   private String reservationItem;
   private Date reservationStartTime;
   private Date reservationEndTime;
+  private String buildingName;
 
   public Reservation() {
   }
 
-  public Reservation(String reservationItem, Date reservationStartTime, Date reservationEndTime) {
+  public Reservation(String reservationItem, Date reservationStartTime, Date reservationEndTime,String buildingName) {
     this.uid = null;
     this.reservationItem = reservationItem;
     this.reservationStartTime = reservationStartTime;
     this.reservationEndTime = reservationEndTime;
+    this.buildingName=buildingName;
   }
 
   public UUID getRid() {
@@ -63,5 +65,13 @@ public class Reservation {
 
   public void setReservationEndTime(Date reservationEndTime) {
     this.reservationEndTime = reservationEndTime;
+  }
+
+  public String getBuildingName() {
+    return buildingName;
+  }
+
+  public void setBuildingName(String buildingName) {
+    this.buildingName = buildingName;
   }
 }

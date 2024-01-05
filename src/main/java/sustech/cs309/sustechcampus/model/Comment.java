@@ -10,7 +10,6 @@ import javax.persistence.Table;
 @Entity
 @Table
 public class Comment {
-
   @Id
   @GeneratedValue
   private UUID cid;
@@ -19,16 +18,18 @@ public class Comment {
   private String commentContent;
   private Date commentTime;
   private UUID nextComment;
+  private String picturePath;
 
   public Comment() {
 
   }
 
-  public Comment(UUID uid, UUID bid, String commentContent, Date commentTime) {
+  public Comment(UUID uid, UUID bid, String commentContent, Date commentTime,String picturePath) {
     this.uid = uid;
     this.bid = bid;
     this.commentContent = commentContent;
     this.commentTime = commentTime;
+    this.picturePath = picturePath;
     this.nextComment = null;
   }
 
@@ -66,5 +67,13 @@ public class Comment {
 
   public void setNextComment(UUID nextComment) {
     this.nextComment = nextComment;
+  }
+
+  public String getPicturePath() {
+    return picturePath;
+  }
+
+  public void setPicturePath(String picturePath) {
+    this.picturePath = picturePath;
   }
 }

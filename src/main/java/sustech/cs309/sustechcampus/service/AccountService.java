@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sustech.cs309.sustechcampus.model.Account;
+import sustech.cs309.sustechcampus.model.Account.authorityType;
 import sustech.cs309.sustechcampus.repository.AccountRepository;
 
 @Service
@@ -52,9 +53,9 @@ public class AccountService {
 
   public void initAccount() {
     List<Account> accountList = new ArrayList<>();
-    accountList.add(new Account("admin", "admin"));
-    accountList.add(new Account("abc", "123"));
-    accountList.add(new Account("321", "cba"));
+    accountList.add(new Account("admin", "admin", authorityType.Admin));
+    accountList.add(new Account("user1", "user1", authorityType.User));
+    accountList.add(new Account("user2", "user2", authorityType.User));
     this.accountRepository.saveAll(accountList);
   }
 }

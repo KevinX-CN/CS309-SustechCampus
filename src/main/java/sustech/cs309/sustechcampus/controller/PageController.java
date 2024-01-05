@@ -1,15 +1,19 @@
 package sustech.cs309.sustechcampus.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import sustech.cs309.sustechcampus.model.Building;
+import sustech.cs309.sustechcampus.model.Comment;
 import sustech.cs309.sustechcampus.service.AccountService;
 import sustech.cs309.sustechcampus.service.BuildingService;
 import sustech.cs309.sustechcampus.service.CommentService;
@@ -33,18 +37,19 @@ public class PageController {
     this.reservationService = reservationService;
   }
 
-  public String getHeader() {
+  public String getHeader(String username) {
     return "header";
   }
 
   @GetMapping("/index")
   public String getPageIndex(Model model) {
-    model.addAttribute("header", getHeader());
+    model.addAttribute("header", getHeader(""));
     return "index";
   }
 
   @GetMapping("/login")
   public String getPageLogin(Model model) {
+    model.addAttribute("header", getHeader(""));
     return "login";
   }
 
@@ -54,27 +59,59 @@ public class PageController {
   }
 
   @GetMapping(value = "/map")
-  public String getPageMap() {
+  public String getPageMap(Model model) {
+    model.addAttribute("building", this.buildingService.getAllBuilding());
     return "map";
+  }
+
+  @GetMapping(value = "/busmap")
+  public String getPageBudMap(Model model) {
+    model.addAttribute("building", this.buildingService.getAllBuilding());
+    return "busmap";
   }
 
   @GetMapping(value = "/building")
   public String getPageBuilding(Model model, @Param(value = "name") String name) {
-    model.addAttribute("header", getHeader());
+    model.addAttribute("header", getHeader(""));
     if (name != null) {
       Building building = this.buildingService.getBuildingByName(name).get();
       model.addAttribute("name", name);
+      model.addAttribute("picturePath",
+        building.getPicturePath());
       model.addAttribute("introduction",
         building.getDetailedInfo());
       model.addAttribute("group",
         building.getBuildingGroup());
+      List<Comment> commentList = new ArrayList<>();
+      UUID cid = building.getFirstComment();
+      while (true&&cid!=null) {
+        Comment comment = this.commentService.getCommentById(cid).get();
+        commentList.add(comment);
+        if (comment.getNextComment() == null) {
+          break;
+        }
+        cid = comment.getNextComment();
+      }
+      model.addAttribute("commentList", commentList);
     }
     return "building";
   }
 
   @GetMapping(value = "/buildingGroup")
   public String getPageBuildingGroup(Model model, @Param(value = "name") String name) {
-    model.addAttribute("header", getHeader());
+    model.addAttribute("header", getHeader(""));
+    if (name != null) {
+      Building building = this.buildingService.getBuildingByName(name).get();
+      model.addAttribute("name", name);
+      model.addAttribute("picturePath",
+        building.getPicturePath());
+      model.addAttribute("introduction",
+        building.getDetailedInfo());
+      model.addAttribute("group",
+        building.getBuildingGroup());
+    }
+    return "buildingGroup";
+    /* model.addAttribute("header", getHeader(""));
     if (name != null) {
       List<Building> buildingGroup = this.buildingService.getBuildingByGroup(name);
       if (buildingGroup.size() == 0) {
@@ -84,7 +121,7 @@ public class PageController {
     } else {
       return null;
     }
-    return "buildingGroup";
+    return "buildingGroup";*/
   }
 
   @GetMapping(value = "/comment")
@@ -96,18 +133,22 @@ public class PageController {
   }
 
   @GetMapping(value = "/addcomment")
-  public String getPageAddcomment() {
+  public String getPageAddcomment(@CookieValue(value = "uid") String uid) {
+    if(uid==null){
+      return "forbidden";
+    }
     return "addcomment";
   }
 
   @GetMapping(value = "/reservation")
-  public String getPageReservation() {
+  public String getPageReservation(Model model) {
+    model.addAttribute("header", getHeader(""));
     return "reservation";
   }
 
   @GetMapping(value = "/admin")
   public String getAdmin(Model model, @Param(value = "name") String buildingName) {
-    model.addAttribute("header", getHeader());
+    model.addAttribute("header", getHeader(""));
     if (buildingName != null) {
       model.addAttribute("buildingName", buildingName);
     }
@@ -116,7 +157,7 @@ public class PageController {
 
   @GetMapping(value = "/admin/building")
   public String getAdminBuilding(Model model, @Param(value = "name") String name) {
-    model.addAttribute("header", getHeader());
+    model.addAttribute("header", getHeader(""));
     if (name != null) {
       Building building = this.buildingService.getBuildingByName(name).get();
       model.addAttribute("name", name);
