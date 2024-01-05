@@ -51,4 +51,12 @@ public class Account {
   public boolean verifyPassword(String password) {
     return this.password.equals(password);
   }
+
+  public authorityType getAuthority() {
+    return authority;
+  }
+
+  public void setAuthority(authorityType authority) {
+    this.authority = authority;
+  }
 }

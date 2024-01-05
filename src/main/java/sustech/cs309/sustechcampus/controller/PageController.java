@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import sustech.cs309.sustechcampus.model.Account;
+import sustech.cs309.sustechcampus.model.Account.authorityType;
 import sustech.cs309.sustechcampus.model.Building;
 import sustech.cs309.sustechcampus.model.Comment;
 import sustech.cs309.sustechcampus.service.AccountService;
@@ -84,7 +86,7 @@ public class PageController {
         building.getBuildingGroup());
       List<Comment> commentList = new ArrayList<>();
       UUID cid = building.getFirstComment();
-      while (true&&cid!=null) {
+      while (true && cid != null) {
         Comment comment = this.commentService.getCommentById(cid).get();
         commentList.add(comment);
         if (comment.getNextComment() == null) {
@@ -134,20 +136,31 @@ public class PageController {
 
   @GetMapping(value = "/addcomment")
   public String getPageAddcomment(@CookieValue(value = "uid") String uid) {
-    if(uid==null){
+    if (uid == null) {
       return "forbidden";
     }
     return "addcomment";
   }
 
   @GetMapping(value = "/reservation")
-  public String getPageReservation(Model model) {
+  public String getPageReservation(Model model, @CookieValue(value = "uid") String uid) {
+    if (uid == null) {
+      return "forbidden";
+    }
     model.addAttribute("header", getHeader(""));
     return "reservation";
   }
 
   @GetMapping(value = "/admin")
-  public String getAdmin(Model model, @Param(value = "name") String buildingName) {
+  public String getAdmin(Model model, @Param(value = "name") String buildingName,
+    @CookieValue(value = "uid") String uid) {
+    try {
+      if (this.accountService.getAuthorityById(UUID.fromString(uid)) != authorityType.Admin) {
+        return "forbidden";
+      }
+    } catch (Exception e) {
+      return "forbidden";
+    }
     model.addAttribute("header", getHeader(""));
     if (buildingName != null) {
       model.addAttribute("buildingName", buildingName);
@@ -156,7 +169,11 @@ public class PageController {
   }
 
   @GetMapping(value = "/admin/building")
-  public String getAdminBuilding(Model model, @Param(value = "name") String name) {
+  public String getAdminBuilding(Model model, @Param(value = "name") String name,
+    @CookieValue(value = "uid") String uid) {
+    if (this.accountService.getAuthorityById(UUID.fromString(uid)) != authorityType.Admin) {
+      return "forbidden";
+    }
     model.addAttribute("header", getHeader(""));
     if (name != null) {
       Building building = this.buildingService.getBuildingByName(name).get();
@@ -174,6 +191,25 @@ public class PageController {
       }
       model.addAttribute("buildingByGroup", buildingByGroup);
       return "adminBuildingList";
+    }
+  }
+
+  @GetMapping(value = "/admin/user")
+  public String getAdminUser(Model model, @Param(value = "name") String name,
+    @CookieValue(value = "uid") String uid) {
+    if (this.accountService.getAuthorityById(UUID.fromString(uid)) != authorityType.Admin) {
+      return "forbidden";
+    }
+    model.addAttribute("header", getHeader(""));
+    if (name != null) {
+      Account user = this.accountService.getUserByUsername(name);
+      model.addAttribute("user", user);
+      model.addAttribute("banned", user.getAuthority() == authorityType.Banned);
+      return "adminUserEdit";
+    } else {
+      List<Account> userList = this.accountService.getAllUser();
+      model.addAttribute("userList", userList);
+      return "adminUserList";
     }
   }
 }

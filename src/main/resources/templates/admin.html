@@ -5,27 +5,7 @@
   <title>Admin Test Page</title>
 </head>
 <body>
-<form method="get">
-  <p>buildingName: <input type="text" name="buildingName"/></p>
-  <button type="submit">view</button>
-</form>
-<form method="post" action="/api/building/edit">
-  <p>buildingName: <input type="text" name="name" id="buildingName2" readonly="readonly"/></p>
-  <p>buildingIntroduction:
-    <input id="buildingIntroduction" name="introduction"/></p>
-  <button type="submit">edit</button>
-</form>
-<h1 id="buildingName" th:text="${buildingName}">buildingName</h1>
-<script>
-  const buildingName = document.getElementById("buildingName").innerText;
-  //alert("/api/building/introduction?name=" + buildingName);
-  let xhr = new XMLHttpRequest();
-  xhr.open("get", "/api/building/introduction?name=" + buildingName, false);
-  xhr.send()
-  const buildingIntroduction = xhr.responseText;
-  //alert(buildingIntroduction);
-  document.getElementById("buildingIntroduction").value = buildingIntroduction;
-  document.getElementById("buildingName2").value = buildingName;
-</script>
+<a href="/page/admin/building">building</a>
+<a href="/page/admin/user">user</a>
 </body>
 </html>

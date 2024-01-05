@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sustech.cs309.sustechcampus.model.Account;
 import sustech.cs309.sustechcampus.model.Account.authorityType;
+import sustech.cs309.sustechcampus.model.Building;
 import sustech.cs309.sustechcampus.repository.AccountRepository;
 
 @Service
@@ -50,6 +51,21 @@ public class AccountService {
     }
     return userByName.get(0).getUid();
   }
+  public Account getUserByUsername(String username) {
+    List<Account> userByName = this.accountRepository.findAllByUsername(username);
+    if (userByName.size() == 0) {
+      return null;
+    }
+    return userByName.get(0);
+  }
+
+  public authorityType getAuthorityById(UUID uid){
+    return this.accountRepository.findById(uid).get().getAuthority();
+  }
+
+  public List<Account> getAllUser(){
+    return this.accountRepository.findAll();
+  }
 
   public void initAccount() {
     List<Account> accountList = new ArrayList<>();
@@ -57,5 +73,16 @@ public class AccountService {
     accountList.add(new Account("user1", "user1", authorityType.User));
     accountList.add(new Account("user2", "user2", authorityType.User));
     this.accountRepository.saveAll(accountList);
+  }
+
+  public void editUserByName(String oldName,String name, boolean banned) {
+    Account user = this.accountRepository.findAllByUsername(oldName).get(0);
+    user.setUserName(name);
+    if(banned){
+      user.setAuthority(authorityType.Banned);
+    }else{
+      user.setAuthority(authorityType.User);
+    }
+    this.accountRepository.save(user);
   }
 }

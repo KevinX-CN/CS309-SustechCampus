@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Building Test Page</title>
+  <link rel="stylesheet" type="text/css" href="/styles/intro.css">
+</head>
+<body>
+<div th:insert="${header}">header</div>
+
+<div class="main-content">
+  <form action="/api/admin/user/edit" method="post">
+    <div>oldName:
+      <input type="text" th:value="${user.getUserName()}" name="oldName" readonly="readonly">
+    </div>
+    <div>name:
+      <input type="text" th:value="${user.getUserName()}" name="name">
+    </div>
+    <div>banned:
+      <input type="radio" th:value="${banned}" >
+    </div>
+    <input type="submit">
+  </form>
+</div>
+</body>
+</html>

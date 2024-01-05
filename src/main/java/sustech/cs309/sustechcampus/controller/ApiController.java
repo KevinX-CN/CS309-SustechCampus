@@ -147,6 +147,13 @@ public class ApiController {
     return true;
   }
 
+  @PostMapping(value = "/admin/user/edit")
+  public boolean postApiUserEdit(@RequestParam(value = "oldName") String oldName,
+    @RequestParam(value = "name") String name) {
+    this.accountService.editUserByName(oldName, name, true);
+    return true;
+  }
+
   /*Comment Apis*/
   @PostMapping(value = {"/comment/add"})
   public void postApiCommentAdd(@CookieValue(value = "uid") String uid,
@@ -188,9 +195,10 @@ public class ApiController {
   @PostMapping(value = {"/reservation/add"})
   public void postApiReservationAdd(@RequestParam(value = "item") String reservationItem,
     @RequestParam(value = "time") Date reservationStartTime,
-    @RequestParam(value = "time") Date reservationEndTime,@RequestParam(value = "building") String buildingName) {
+    @RequestParam(value = "time") Date reservationEndTime,
+    @RequestParam(value = "building") String buildingName) {
     Reservation reservation = new Reservation(reservationItem, reservationStartTime,
-      reservationEndTime,buildingName);
+      reservationEndTime, buildingName);
     this.reservationService.addReservation(reservation);
   }
 

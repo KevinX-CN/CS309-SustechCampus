@@ -8,11 +8,11 @@
 <body>
 <div th:insert="${header}">header</div>
 <h2>ReservationTable</h2>
-<form method="post" action="/page/reservation">
-  <p>building: <input type="text" name="building"/></p>
-  <p>item: <input type="text" name="item"/></p>
-  <button type="submit">Search</button>
-</form>
+<div>
+  <span>building: <input type="text" id="buildingIn"/></span>
+  <span>item: <input type="text" id="itemIn"/></span>
+  <button onclick="f()">Search</button>
+</div>
 <table id="reservationTable">
   <tr>
     <th>rid</th>
@@ -24,53 +24,86 @@
   </tr>
 </table>
 <script>
-  const reservationTable = document.getElementById("reservationTable");
-  let xhr = new XMLHttpRequest();
-  xhr.open("get", "/api/reservation/list", false);
-  xhr.send()
-  const reservationList = xhr.responseText;
-  for (let i of reservationList.substring(2, reservationList.length - 2).split('},{')) {
-    reservationData = i.split(",");
-    //alert(reservationData);
-    let rid = reservationData[0].split(":")[1];
-    rid = rid.substring(1, rid.length - 1);
-    let uid = reservationData[1].split(":")[1];
-    if (uid.length > 4) {
-      uid = uid.substring(1, uid.length - 1);
-    }
-    let reservationItem = reservationData[2].split(":")[1];
-    reservationItem = reservationItem.substring(1, reservationItem.length - 1);
-    let reservationStartTime = reservationData[3].split(":")[1];
-    reservationStartTime = reservationStartTime.substring(1, reservationStartTime.length - 1);
-    let reservationEndTime = reservationData[4].split(":")[1];
-    reservationEndTime = reservationEndTime.substring(1, reservationEndTime.length - 1);
-    let reservationBuilding = reservationData[5].split(":")[1];
-    reservationBuilding = reservationBuilding.substring(1, reservationEndTime.length - 1);
-    //alert(reservationEndTime);
-    let newRowContent = "<td>" + rid + "</td>\n" +
-        "<td>" + reservationBuilding + "</td>\n";
-        "<td>" + reservationItem + "</td>\n" +
-        "<td>" + reservationStartTime + "</td>\n" +
-        "<td>" + reservationEndTime + "</td>\n" +
-        "<td>reserve</td>\n";
-    let newRow = document.createElement("tr");
-    newRow.innerHTML = newRowContent;
-    reservationTable.appendChild(newRow);
-  }
+  f();
 
-  reservationTable.addEventListener("click", function TabClick() {
-    let selectedRow = event.srcElement.parentElement.rowIndex;
-    let selectedColumn = event.srcElement.cellIndex;
-    if (selectedColumn === 5) {
-      let rid = reservationTable.rows[selectedRow].cells[0].innerHTML;
-      let uid = document.getElementById("uid").value;
-      xhr.open("post", "/api/reservation/reserve");
-      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
-      xhr.send("rid=" + rid + "&uid=" + uid);
-      alert(uid);
-      alert(rid);
+  function f() {
+    const buildingIn = document.getElementById("buildingIn");
+    const itemIn = document.getElementById("itemIn");
+    const reservationTable = document.getElementById("reservationTable");
+    reservationTable.innerHTML = "<tr>\n"
+        + "    <th>rid</th>\n"
+        + "    <th>building</th>\n"
+        + "    <th>item</th>\n"
+        + "    <th>startTime</th>\n"
+        + "    <th>endTime</th>\n"
+        + "    <th>reserve</th>\n"
+        + "  </tr>";
+    let cookie_list = document.cookie.split("; ");
+    let now_uid = "";
+    for (let i of cookie_list) {
+      let key = i.split("=")[0];
+      if (key === "uid") {
+        now_uid = i.split("=")[1];
+      }
     }
-  });
+    let xhr = new XMLHttpRequest();
+    let para = "";
+    if (buildingIn.value.length > 0 && itemIn.value.length > 0) {
+      para = "?building=" + buildingIn.value + "&item=" + itemIn.value.length;
+    } else if (buildingIn.value.length > 0) {
+      para += "?building=" + buildingIn.value;
+    } else if (itemIn.value.length > 0) {
+      para += "?item=" + itemIn.value;
+    }
+    xhr.open("get", "/api/reservation/list" + para, false);
+    xhr.send()
+    const reservationList = xhr.responseText;
+    for (let i of reservationList.substring(2, reservationList.length - 2).split('},{')) {
+      reservationData = i.split(",");
+      //alert(reservationData);
+      let rid = reservationData[0].split(":")[1];
+      rid = rid.substring(1, rid.length - 1);
+      let uid = reservationData[1].split(":")[1];
+      if (uid.length > 4) {
+        uid = uid.substring(1, uid.length - 1);
+      }
+      let reservationItem = reservationData[2].split(":")[1];
+      reservationItem = reservationItem.substring(1, reservationItem.length - 1);
+      let reservationStartTime = reservationData[3].split(":")[1];
+      reservationStartTime = reservationStartTime.substring(1, reservationStartTime.length - 1);
+      let reservationEndTime = reservationData[4].split(":")[1];
+      reservationEndTime = reservationEndTime.substring(1, reservationEndTime.length - 1);
+      let reservationBuilding = reservationData[5].split(":")[1];
+      reservationBuilding = reservationBuilding.substring(1, reservationBuilding.length - 1);
+      //alert(reservationEndTime);
+      let newRowContent = "<td>" + rid + "</td>\n" +
+          "<td>" + reservationBuilding + "</td>\n" +
+          "<td>" + reservationItem + "</td>\n" +
+          "<td>" + reservationStartTime + "</td>\n" +
+          "<td>" + reservationEndTime + "</td>\n";
+      if (uid === now_uid) {
+        newRowContent += "<td>undo reserve</td>\n"
+      } else {
+        newRowContent += "<td>reserve</td>\n"
+      }
+      let newRow = document.createElement("tr");
+      newRow.innerHTML = newRowContent;
+      reservationTable.appendChild(newRow);
+    }
+
+    reservationTable.addEventListener("click", function TabClick() {
+      let selectedRow = event.srcElement.parentElement.rowIndex;
+      let selectedColumn = event.srcElement.cellIndex;
+      if (selectedColumn === 5) {
+        let rid = reservationTable.rows[selectedRow].cells[0].innerHTML;
+        xhr.open("post", "/api/reservation/reserve");
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+        xhr.send("rid=" + rid);
+        alert(rid);
+        location.reload();
+      }
+    });
+  }
 </script>
 </body>
 </html>

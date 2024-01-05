@@ -33,22 +33,29 @@ public class ReservationService {
     Optional<Reservation> reservation = this.reservationRepository.findById(rid);
     if (reservation.isEmpty()) {
       return false;
-    } else if (reservation.get().getUid() != null) {
-      return false;
+    } else if (reservation.get().getUid() == uid) {
+      reservation.get().setUid(null);
+    } else {
+      reservation.get().setUid(uid);
     }
-    reservation.get().setUid(uid);
     this.reservationRepository.save(reservation.get());
     return true;
   }
 
   public void initReservation() {
     List<Reservation> reservationList = new ArrayList<>();
-    reservationList.add(new Reservation("猪脚饭", new Date(124, 0, 1), new Date(124, 0, 1),"中心食堂"));
-    reservationList.add(new Reservation("鸡脚饭", new Date(124, 0, 1), new Date(124, 0, 1),"中心食堂"));
-    reservationList.add(new Reservation("牛脚饭", new Date(124, 0, 1), new Date(124, 0, 1),"中心食堂"));
-    reservationList.add(new Reservation("猪脚饭", new Date(124, 0, 1), new Date(124, 0, 1),"第二学生食堂"));
-    reservationList.add(new Reservation("鸡脚饭", new Date(124, 0, 1), new Date(124, 0, 1),"第二学生食堂"));
-    reservationList.add(new Reservation("牛脚饭", new Date(124, 0, 1), new Date(124, 0, 1),"第二学生食堂"));
+    reservationList.add(
+      new Reservation("猪脚饭", new Date(124, 0, 1), new Date(124, 0, 1), "中心食堂"));
+    reservationList.add(
+      new Reservation("鸡脚饭", new Date(124, 0, 1), new Date(124, 0, 1), "中心食堂"));
+    reservationList.add(
+      new Reservation("牛脚饭", new Date(124, 0, 1), new Date(124, 0, 1), "中心食堂"));
+    reservationList.add(
+      new Reservation("猪脚饭", new Date(124, 0, 1), new Date(124, 0, 1), "第二学生食堂"));
+    reservationList.add(
+      new Reservation("鸡脚饭", new Date(124, 0, 1), new Date(124, 0, 1), "第二学生食堂"));
+    reservationList.add(
+      new Reservation("牛脚饭", new Date(124, 0, 1), new Date(124, 0, 1), "第二学生食堂"));
     this.reservationRepository.saveAll(reservationList);
   }
 }

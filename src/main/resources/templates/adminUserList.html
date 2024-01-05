@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Building Test Page</title>
+  <link rel="stylesheet" type="text/css" href="/styles/intro.css">
+</head>
+<body>
+<div th:insert="${header}">header</div>
+
+<div class="main-content" th:each="user:${userList}">
+  <div>
+    <a th:href="@{'/page/admin/user'(name=${user.getUserName()})}"
+       th:text="${user.getUserName()}"></a>
+  </div>
+</div>
+
+</body>
+</html>
