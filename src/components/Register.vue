@@ -1,0 +1,259 @@
+<template>
+  <div class="container">
+    <div class="main">
+        <!-- 整个注册盒子 -->
+      <div class="loginbox">
+          <!-- 左侧的注册盒子 -->
+          <div class="loginbox-in">
+          <div class="userbox">
+           <span class="iconfont">&#xe817;</span>
+           <input  class="user" id="user"  v-model="name" placeholder="用户名">
+           </div>
+          <br>
+          <div class="pwdbox">
+            <span class="iconfont">&#xe775;</span>
+           <input  class="pwd"  id="password" v-model="pwd" type="password"  placeholder="密码">
+           </div>
+          <br>
+          <div class="pwdbox">
+            <span class="iconfont">&#xe775;</span>
+           <input  class="pwd"  id="re_password"  v-model="repwd" type="password"  placeholder="确认密码">
+           </div>
+
+           <br>
+           <button type="primary"  class="register_btn" @click="register">Register</button>
+     </div>
+
+        <!-- 右侧的注册盒子 -->
+         <div class="background">
+            <div class="title">Welcome to Sustech Campus Server Center</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Login",
+
+  data:function (){
+    return{
+      name:'',
+      pwd:'',
+      repwd:'',
+      user_list:
+      {
+        username:'admin',
+        password:'123'
+      }
+    }
+  },
+  methods:{
+
+    async register() {
+      try {
+        const response = await this.$axios.get(`http://localhost:8082/exer/login/${this.name}/${this.pwd}`);
+        console.log(response.data);
+
+
+        if (this.pwd !== this.repwd) {
+          alert('两次输入的密码不一致，请重新输入');
+          return;
+        }
+
+        if (response.data.status !== 'notexit') {
+          alert('用户已存在，请换一个用户名');
+          return;
+        }
+        console.log(this.name)
+        console.log(this.pwd)
+        const registerResponse = await this.$axios.post('http://localhost:8082/exer/register',null,{params:{ name: this.name, password: this.pwd }});
+        console.log(registerResponse.data);
+        alert('注册成功');
+        this.$router.push({ path: '/' });
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+  }
+}
+</script>
+
+<style scoped>
+.container{
+  background-color: #c5d5d0;
+  width:100%;
+  height:100%;
+  position:fixed;
+}
+.loginbox{
+    display:flex;
+    position:absolute;
+    width:800px;
+    height:400px;
+    top:40%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    box-shadow: 0 12px 16px 0  rgba(0,0,0,0.24), 0 17px 50px 0 #4E655D;
+}
+.loginbox-in{
+     background-color:#89AB9E;
+     width:240px;
+}
+.userbox{
+    margin-top:120px ;
+    height:30px;
+     width:230px;
+     display: flex;
+     margin-left:25px;
+}
+.pwdbox{
+    height:30px;
+    width:225px;
+    display: flex;
+    margin-left:25px;
+}
+
+.background{
+    width:570px;
+    background-image:url('./img/123.png');
+    background-size:cover;
+    font-family:sans-serif;
+}
+.title{
+    margin-left: 60px;
+    margin-top:350px;
+    font-weight:bold;
+    font-size:20px;
+    color: #ee5f07;
+}
+.title:hover{
+     font-size:21px;
+     transition: all 0.4s ease-in-out;
+     cursor: pointer;
+}
+
+input{
+    outline-style: none ;
+    border: 0;
+    border-bottom:1px solid #E9E9E9;
+    background-color:transparent;
+    height:20px;
+     font-family:sans-serif;
+    font-size:15px;
+    color:#445b53;
+    font-weight:bold;
+}
+ /* input::-webkit-input-placeholder{
+    color:#E9E9E9;
+ } */
+input:focus{
+    border-bottom:2px solid #445b53;
+    background-color:transparent;
+     transition: all 0.2s ease-in;
+     font-family:sans-serif;
+    font-size:15px;
+     color:#445b53;
+     font-weight:bold;
+
+}
+input:hover{
+    border-bottom:2px solid #445b53;
+    background-color:transparent;
+     transition: all 0.2s ease-in;
+     font-family:sans-serif;
+    font-size:15px;
+     color:#445b53;
+     font-weight:bold;
+
+}
+
+input:-webkit-autofill {
+ box-shadow: 0 0 0px 1000px  #89AB9E inset !important;
+ -webkit-text-fill-color: #445b53;
+
+}
+
+input:-webkit-autofill::first-line {
+ font-size: 15px;
+ font-weight:bold;
+ }
+.log-box{
+    font-size:12px;
+    display: flex;
+    justify-content: space-between ;
+    width:174px;
+    margin-left:30px;
+    color:#4E655D;
+    margin-top:-5px;
+    align-items: center;
+
+}
+.log-box-text{
+    color:#4E655D;
+    font-size:12px;
+      text-decoration:underline;
+    }
+.register_btn{
+    background-color: #5f8276; /* Green */
+    border: none;
+    color: #FAFAFA;
+    padding: 7px 35px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 13px;
+    border-radius: 20px;
+    outline:none;
+}
+.register_btn:hover{
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    cursor: pointer;
+     background-color: #0b5137;
+    transition: all 0.2s ease-in;
+}
+
+.warn{
+    margin-top:60px;
+    margin-right:110px;
+    margin-bottom: 5px;
+    font-weight:bold;
+    font-size:17px;
+}
+
+
+.register_btn:hover{
+    font-weight:bold;
+    cursor: pointer;
+}
+@font-face {
+    font-family: "iconfont";
+    src: url('./font/iconfont.eot');
+    src: url('./font/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('./font/iconfont.woff2') format('woff2'), url('./font/iconfont.woff') format('woff'), url('./font/iconfont.ttf') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+    url('./font/iconfont.svg#iconfont') format('svg');
+}
+
+.iconfont {
+    font-family: "iconfont" !important;
+    font-size: 20px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    height:22px;
+    color:#4E655D;
+    margin-right:10px;
+    margin-top:3px;
+}
+
+.icon-key:before {
+    content: "\e775";
+}
+
+.icon-account:before {
+    content: "\e817";
+}
+
+</style>
